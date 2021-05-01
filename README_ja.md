@@ -1,6 +1,6 @@
 # mdast-qrcode
 
-convert "qrcode:" to dataURL in Image URL of [mdast](https://github.com/syntax-tree/mdast) by using [qrcode](https://www.npmjs.com/package/qrcode).
+[mdast](https://github.com/syntax-tree/mdast) の Image URL に含まれる "qrcode:" を [qrcode](https://www.npmjs.com/package/qrcode) によって変換。
 
 ## Install
 
@@ -39,12 +39,12 @@ test1
 
 ### `toImageDataURL(tree[, options])`
 
-convert "qrcode:" to dataURL in Image URL of [mdast](https://github.com/syntax-tree/mdast).
-Images only support `root / paragraph / image` hierarchy.
+[dast](https://github.com/syntax-tree/mdast) の画像 URL に含まれる "qrcode:" を変換。
+画像は `root / paragraph / image` 階層のみサポートしている。
 
-#### options 
+#### options`
 
-Options are passed to [QRCode,toDataURL](https://www.npmjs.com/package/qrcode#todataurltext-options-cberror-url-1).
+options は [QRCode,toDataURL](https://www.npmjs.com/package/qrcode#todataurltext-options-cberror-url-1) へ渡される。
 
 #### returns
 
@@ -64,7 +64,7 @@ $ cat example/qrcode-deck.md  | md-qr > qrcode-embedded-deck.md
 }
 ```
 
-`toMarkdown.bullet` / `toMarkdown.rule`  field are pass to [toMarkdown](https://github.com/syntax-tree/mdast-util-to-markdown#tomarkdowntree-options).
+`toMarkdown.bullet` / `toMarkdown.rule` フィールドは [toMarkdown](https://github.com/syntax-tree/mdast-util-to-markdown#tomarkdowntree-options) へ渡される。
 
 
 ## License

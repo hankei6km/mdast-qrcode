@@ -22,7 +22,7 @@
     "dist"
   ],
   "bin": {
-    "md-qr": "dist/main.js"
+    "mdqr": "dist/main.js"
   },
   "scripts": {
     "start": "tsc && node dist/main.js",

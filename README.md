@@ -77,7 +77,7 @@ Options are passed to [QRCode,toDataURL](https://www.npmjs.com/package/qrcode#to
 
 #### returns
 
-`Promise<void>`
+`Promise<MdNode>`
 
 ## CLI
 

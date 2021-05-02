@@ -9,7 +9,7 @@ const qrcodeInAlt = /(^|(^.*):)qrcode:(.+)$/;
 export async function toImageDataURL(
   tree: MdNode,
   options?: QRCode.QRCodeToDataURLOptions
-): Promise<void> {
+): Promise<MdNode> {
   if (tree.type === 'root' && Array.isArray(tree.children)) {
     const l = tree.children.length;
     for (let i = 0; i < l; i++) {
@@ -39,4 +39,5 @@ export async function toImageDataURL(
       }
     }
   }
+  return tree;
 }

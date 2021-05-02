@@ -77,7 +77,7 @@ options は [QRCode,toDataURL](https://www.npmjs.com/package/qrcode#todataurltex
 
 #### returns
 
-`Promise<void>`
+`Promise<MdNode>`
 
 ## CLI
 

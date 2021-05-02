@@ -1,6 +1,6 @@
 # mdast-qrcode
 
-convert "qrcode:" to dataURL in Image URL of [mdast](https://github.com/syntax-tree/mdast) by using [qrcode](https://www.npmjs.com/package/qrcode).
+convert "qrcode:" to dataURL in Image URL/alt of [mdast](https://github.com/syntax-tree/mdast) by using [qrcode](https://www.npmjs.com/package/qrcode).
 
 ## Install
 
@@ -12,6 +12,8 @@ npm install mdast-qrcode
 
 ## Usage
 
+### `qrcode:` in URL
+
 code:
 
 ```typescript
@@ -20,7 +22,7 @@ import toMarkdown from 'mdast-util-to-markdown';
 import { toImageDataURL } from './qrcode';
 
 (async () => {
-  const tree = fromMarkdown('# test1\n\n![](qrcode:test1)\ntest1');
+  const tree = fromMarkdown('# title1\n\n![alt1](qrcode:test1)\ntext1');
   await toImageDataURL(tree);
   console.log(toMarkdown(tree));
 })();
@@ -29,10 +31,37 @@ import { toImageDataURL } from './qrcode';
 yield:
 
 ```markdown
-# test1
+# title1
 
-![](data:image/png;base64,iVBORw0KGgoAAAANSU ...snip ...=)
-test1
+![alt1](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHQAA ...snip ...=)
+text1
+```
+
+###  `qrcode:` in alt with filename is `qrcode.*` 
+
+code:
+
+```typescript
+import fromMarkdown from 'mdast-util-from-markdown';
+import toMarkdown from 'mdast-util-to-markdown';
+import { toImageDataURL } from './qrcode';
+
+(async () => {
+  const tree = fromMarkdown(
+    '# title3\n\n![alt3:qrcode:test3](/path/to/qrcode.png)\ntext3'
+  );
+  await toImageDataURL(tree);
+  console.log(toMarkdown(tree));
+})();
+```
+
+yield:
+
+```markdown
+# title3
+
+![alt3](data:image/png;base64,iVBORw0KGgoAAAA ...snip ...=)
+text3
 ```
 
 ## API
@@ -55,6 +84,9 @@ Options are passed to [QRCode,toDataURL](https://www.npmjs.com/package/qrcode#to
 ```console
 $ cat example/qrcode-deck.md  | md-qr > qrcode-embedded-deck.md
 ```
+
+In addition to `:qrcode` convertion, Markdown string are also affected by [toMarkdown](https://github.com/syntax-tree/mdast-util-to-markdown#tomarkdowntree-options) serialized.
+
 
 ### JSON config file
 

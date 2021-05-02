@@ -98,6 +98,12 @@ In addition to `:qrcode` convertion, Markdown string are also affected by [toMar
 
 `toMarkdown.bullet` / `toMarkdown.rule`  field are pass to [toMarkdown](https://github.com/syntax-tree/mdast-util-to-markdown#tomarkdowntree-options).
 
+## Live Demo
+
+[Live Demo](https://codesandbox.io/s/github/hankei6km/mdast-qrcode-live-demo?file=/slides/slide-deck.md)
+
+1. fork
+1. edit `slides/slide-deck.md`
 
 ## License
 

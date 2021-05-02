@@ -97,6 +97,12 @@ $ cat example/qrcode-deck.md  | md-qr > qrcode-embedded-deck.md
 
 `toMarkdown.bullet` / `toMarkdown.rule` フィールドは [toMarkdown](https://github.com/syntax-tree/mdast-util-to-markdown#tomarkdowntree-options) へ渡される。
 
+## Live Demo
+
+[Live Demo](https://codesandbox.io/s/github/hankei6km/mdast-qrcode-live-demo?file=/slides/slide-deck.md)
+
+1. fork
+1. `slides/slide-deck.md` を編集
 
 ## License
 

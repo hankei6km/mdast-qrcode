@@ -12,9 +12,41 @@ _class:
 
 # **QR** code
 
+## mdast-qrcode exmaple slide
+
+https://github.com/hankei6km/mdast-qrcode
+
+![bg left](qrcode:https://github.com/hankei6km/mdast-qrcode)
+
 ---
 
 ## QR code (url)
 
-![h:320](qrcode:https://github.com/hankei6km/mdast-qrcode)
+source:
+
+```markdown
+![h:200](qrcode:https://github.com/hankei6km/mdast-qrcode)
 https://github.com/hankei6km/mdast-qrcode
+```
+
+yield:
+
+![h:200](qrcode:https://github.com/hankei6km/mdast-qrcode)
+https://github.com/hankei6km/mdast-qrcode
+
+---
+
+## QR code (alt)
+
+source:
+
+```markdown
+![h:200:qrcode:https://github.com/hankei6km/mdast-qrcode](mdast-qrcode.png)
+https://github.com/hankei6km/mdast-qrcode
+```
+
+yield:
+
+![h:200:qrcode:https://github.com/hankei6km/mdast-qrcode](mdast-qrcode.png)
+https://github.com/hankei6km/mdast-qrcode
+

@@ -3,6 +3,7 @@ import { Node as MdNode } from 'unist';
 //const QRCode = require('qrcode');
 import QRCode from 'qrcode';
 
+const dummyQrcodeFile = 'mdast-qrcode'
 const qrcodeInAlt = /(^|(^.*):)qrcode:(.+)$/;
 
 export async function toImageDataURL(
@@ -24,7 +25,7 @@ export async function toImageDataURL(
               const text = cc.url.slice(7); // 'qrcode:'.length = 7
               const d = await QRCode.toDataURL(text, options);
               cc.url = d;
-            } else if (path.parse(cc.url).name === 'qrcode') {
+            } else if (path.parse(cc.url).name === dummyQrcodeFile) {
               // as alt
               const m = cc.alt.match(qrcodeInAlt);
               if (m && m[3]) {

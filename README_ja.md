@@ -48,7 +48,7 @@ import { toImageDataURL } from './qrcode';
 
 (async () => {
   const tree = fromMarkdown(
-    '# title3\n\n![alt3:qrcode:test3](/path/to/qrcode.png)\ntext3'
+    '# title3\n\n![alt3:qrcode:test3](/path/to/mdast-qrcode.png)\ntext3'
   );
   await toImageDataURL(tree);
   console.log(toMarkdown(tree));

@@ -12,7 +12,7 @@ describe('toDataURL()', () => {
   });
   it('should convert "qrcode:" in alt to DataURL', async () => {
     const tree = fromMarkdown(
-      '# title2\n\n![qrcode:test2](/path/to/qrcode.png)\ntext2'
+      '# title2\n\n![qrcode:test2](/path/to/mdast-qrcode.png)\ntext2'
     );
     await toImageDataURL(tree);
     expect(toMarkdown(tree)).toEqual(
@@ -21,7 +21,7 @@ describe('toDataURL()', () => {
   });
   it('should convert ".+:qrcode:" in alt to DataURL', async () => {
     const tree = fromMarkdown(
-      '# title3\n\n![alt3:qrcode:test3](/path/to/qrcode.png)\ntext3'
+      '# title3\n\n![alt3:qrcode:test3](/path/to/mdast-qrcode.png)\ntext3'
     );
     await toImageDataURL(tree);
     expect(toMarkdown(tree)).toEqual(

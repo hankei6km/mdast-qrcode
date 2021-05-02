@@ -37,7 +37,7 @@ yield:
 text1
 ```
 
-### ファイル名が `qrcode.*` で alt に `qrcode:`
+### ファイル名が `mdast-qrcode.*` で alt に `qrcode:`
 
 code:
 

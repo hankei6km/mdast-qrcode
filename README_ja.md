@@ -1,6 +1,6 @@
 # mdast-qrcode
 
-convert "qrcode:" to dataURL in Image URL/alt of [mdast](https://github.com/syntax-tree/mdast) by using [qrcode](https://www.npmjs.com/package/qrcode).
+[mdast](https://github.com/syntax-tree/mdast) の Image URL または alt に含まれる "qrcode:" を [qrcode](https://www.npmjs.com/package/qrcode) によって変換。
 
 ## Install
 
@@ -12,7 +12,7 @@ npm install mdast-qrcode
 
 ## Usage
 
-### `qrcode:` in URL
+### URL に `qrcode:`
 
 code:
 
@@ -37,7 +37,7 @@ yield:
 text1
 ```
 
-###  `qrcode:` in alt with filename is `qrcode.*` 
+### ファイル名が `qrcode.*` で alt に `qrcode:`
 
 code:
 
@@ -68,12 +68,12 @@ text3
 
 ### `toImageDataURL(tree[, options])`
 
-convert "qrcode:" to dataURL in Image URL of [mdast](https://github.com/syntax-tree/mdast).
-Images only support `root / paragraph / image` hierarchy.
+[dast](https://github.com/syntax-tree/mdast) の画像に含まれる "qrcode:" を変換。
+画像は `root / paragraph / image` 階層のみサポートしている。
 
-#### options 
+#### options`
 
-Options are passed to [QRCode,toDataURL](https://www.npmjs.com/package/qrcode#todataurltext-options-cberror-url-1).
+options は [QRCode,toDataURL](https://www.npmjs.com/package/qrcode#todataurltext-options-cberror-url-1) へ渡される。
 
 #### returns
 
@@ -85,8 +85,7 @@ Options are passed to [QRCode,toDataURL](https://www.npmjs.com/package/qrcode#to
 $ cat example/qrcode-deck.md  | md-qr > qrcode-embedded-deck.md
 ```
 
-In addition to `:qrcode` convertion, Markdown string are also affected by [toMarkdown](https://github.com/syntax-tree/mdast-util-to-markdown#tomarkdowntree-options) serialized.
-
+なお、出力される markdown 文字列は、`:qrcode` 変換以外も to-markdown の変換に影響される。
 
 ### JSON config file
 
@@ -96,7 +95,7 @@ In addition to `:qrcode` convertion, Markdown string are also affected by [toMar
 }
 ```
 
-`toMarkdown.bullet` / `toMarkdown.rule`  field are pass to [toMarkdown](https://github.com/syntax-tree/mdast-util-to-markdown#tomarkdowntree-options).
+`toMarkdown.bullet` / `toMarkdown.rule` フィールドは [toMarkdown](https://github.com/syntax-tree/mdast-util-to-markdown#tomarkdowntree-options) へ渡される。
 
 
 ## License

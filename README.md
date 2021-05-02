@@ -37,7 +37,7 @@ yield:
 text1
 ```
 
-###  `qrcode:` in alt with filename is `qrcode.*` 
+###  `qrcode:` in alt with filename is `mdast-qrcode.*` 
 
 code:
 

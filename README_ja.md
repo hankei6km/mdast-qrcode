@@ -1,6 +1,6 @@
 # mdast-qrcode
 
-[mdast](https://github.com/syntax-tree/mdast) の Image URL または alt に含まれる "qrcode:" を [qrcode](https://www.npmjs.com/package/qrcode) によって変換。
+[mdast](https://github.com/syntax-tree/mdast) の画像またはリンクの URL 等を [qrcode](https://www.npmjs.com/package/qrcode) パッケージによって QR code へ変換。
 
 ## Install
 
@@ -12,7 +12,7 @@ npm install mdast-qrcode
 
 ## Usage
 
-### URL に `qrcode:`
+### 画像の URL に `qrcode:`
 
 code:
 
@@ -64,12 +64,40 @@ yield:
 text3
 ```
 
+### ファイル名が `mdast-qrcode.*` の画像を囲んでいるリンクの URL
+
+code:
+
+```typescript
+import fromMarkdown from 'mdast-util-from-markdown';
+import toMarkdown from 'mdast-util-to-markdown';
+import { toImageDataURL } from './qrcode';
+
+(async () => {
+  const tree = fromMarkdown(
+    '# title5\n\n[![alt5](/path/to/mdast-qrcode.png)](url5)\ntext5'
+  );
+  await toImageDataURL(tree);
+  console.log(toMarkdown(tree));
+})();
+```
+
+yield:
+
+```markdown
+# title5
+
+[![alt5](data:image/png;base64,iVBORw0KGgoAAAAN ...snip ...=)](url5)
+text5
+```
+
+
 ## API
 
 ### `toImageDataURL(tree[, options])`
 
-[dast](https://github.com/syntax-tree/mdast) の画像に含まれる "qrcode:" を変換。
-画像は `root / paragraph / image` 階層のみサポートしている。
+[mdast](https://github.com/syntax-tree/mdast) の画像に含まれる "qrcode:" を変換。
+画像は `root / paragraph / image` または `root / paragraph / link / image`  階層のみサポートしている。
 
 #### options`
 

@@ -1,6 +1,6 @@
 # mdast-qrcode
 
-convert "qrcode:" to dataURL in Image URL/alt of [mdast](https://github.com/syntax-tree/mdast) by using [qrcode](https://www.npmjs.com/package/qrcode).
+convert a URL etc. that contained in Image / Link of [mdast](https://github.com/syntax-tree/mdast) by using [qrcode](https://www.npmjs.com/package/qrcode) package.
 
 ## Install
 
@@ -12,7 +12,7 @@ npm install mdast-qrcode
 
 ## Usage
 
-### `qrcode:` in URL
+### `qrcode:` in URL of Image
 
 code:
 
@@ -64,12 +64,39 @@ yield:
 text3
 ```
 
+### The URL of link that surrounds image with filename is `mdast-qrcode.*` 
+
+code:
+
+```typescript
+import fromMarkdown from 'mdast-util-from-markdown';
+import toMarkdown from 'mdast-util-to-markdown';
+import { toImageDataURL } from './qrcode';
+
+(async () => {
+  const tree = fromMarkdown(
+    '# title5\n\n[![alt5](/path/to/mdast-qrcode.png)](url5)\ntext5'
+  );
+  await toImageDataURL(tree);
+  console.log(toMarkdown(tree));
+})();
+```
+
+yield:
+
+```markdown
+# title5
+
+[![alt5](data:image/png;base64,iVBORw0KGgoAAAAN ...snip ...=)](url5)
+text5
+```
+
 ## API
 
 ### `toImageDataURL(tree[, options])`
 
 convert "qrcode:" to dataURL in Image URL of [mdast](https://github.com/syntax-tree/mdast).
-Images only support `root / paragraph / image` hierarchy.
+Images only support `root / paragraph / image` or `root / paragraph / link / image`  hierarchy.
 
 #### options 
 

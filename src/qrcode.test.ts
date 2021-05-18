@@ -35,4 +35,22 @@ describe('toDataURL()', () => {
       '# title4\n\n![alt4](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHQAAAB0CAYAAABUmhYnAAAAAklEQVR4AewaftIAAAK5SURBVO3BQW7sWAwEwSxC979yjpdcPUCQusfmZ0T8wRqjWKMUa5RijVKsUYo1SrFGKdYoxRqlWKMUa5RijVKsUYo1SrFGKdYoFw8l4ZtUnkhCp3KShG9SeaJYoxRrlGKNcvEylTcl4Y4kdCpvUnlTEt5UrFGKNUqxRrn4sCTcoXJHEjqVLgknSehU7kjCHSqfVKxRijVKsUa5GCYJ/7JijVKsUYo1ysU/RqVLwiTFGqVYoxRrlIsPU/lNktCpPKHymxRrlGKNUqxRLl6WhP+TSpeETqVLQqdykoTfrFijFGuUYo0Sf/CHJaFT+ZcVa5RijVKsUS4eSkKn0iXhTSqdykkSTlROkvAmlU8q1ijFGqVYo8Qf/CFJOFE5ScITKidJOFHpktCpPFGsUYo1SrFGuXgoCZ3KHUnoVLoknKicJKFT6ZLQqXRJ6JLQqdyRhE7lTcUapVijFGuU+IMHknCHyicloVPpkvCEykkSTlQ+qVijFGuUYo1y8WVJOFHpktCpnKh0SehUuiR0KidJ6FROVLokdCpvKtYoxRqlWKNcPKTySSonSehUOpVvUumScJKETuWJYo1SrFGKNUr8wQNJ+CaVkyR0Kl0SOpUuCZ3KSRJOVLokdCpvKtYoxRqlWKNcvEzlTUk4SUKn0iWhUzlROUnCHUn4pmKNUqxRijXKxYcl4Q6VJ5LQqXRJ6FS6JHQqnUqXhBOVLgmfVKxRijVKsUa5GEbljiScJOFEpUtCl4RO5ZOKNUqxRinWKBfDJaFT6ZLQqXRJuEOlS8I3FWuUYo1SrFEuPkzlk1S6JHQqXRJOkvCXFWuUYo1SrFEuXpaEb0pCp3Ki0iWhU3kiCZ1Kl4RO5U3FGqVYoxRrlPiDNUaxRinWKMUapVijFGuUYo1SrFGKNUqxRinWKMUapVijFGuUYo1SrFH+A3hPDvkpvReRAAAAAElFTkSuQmCC)\ntext4\n'
     );
   });
+  it('should convert the url of link that surround dummy image to DataURL', async () => {
+    const tree = fromMarkdown(
+      '# title5\n\n[![alt5](/path/to/mdast-qrcode.png)](url5)\ntext5'
+    );
+    await toImageDataURL(tree);
+    expect(toMarkdown(tree)).toEqual(
+      '# title5\n\n[![alt5](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHQAAAB0CAYAAABUmhYnAAAAAklEQVR4AewaftIAAAKiSURBVO3BQY7cQAwEwSxC//9yeo88NTCQtB7TjIg/WGMUa5RijVKsUYo1SrFGKdYoxRqlWKMUa5RijVKsUYo1SrFGKdYoxRrl4qYk/CaVO5JwotIl4Tep3FGsUYo1SrFGuXiYypOS8CaVT6g8KQlPKtYoxRqlWKNcvCwJn1D5RBI6lS4JncqTkvAJlTcVa5RijVKsUS6GU/mfFGuUYo1SrFEu/jNJOFH5lxVrlGKNUqxRLl6m8k1UuiTcofJNijVKsUYp1igXD0vCN0lCp3JHEr5ZsUYp1ijFGuXiJpVvptIl4RMq/5JijVKsUYo1ysVNSehUuiQ8SaVT+YRKl4STJDxJ5U3FGqVYoxRrlIu/TOUTSThReZJKl4RO5SQJXRJOVO4o1ijFGqVYo1w8LAlPSkKn8okknKh0SehUOpUuCZ1Kp9IloVN5UrFGKdYoxRrl4iaVLgknKl0STlS6JHQqn1A5UTlJwkkS/qZijVKsUYo1ysXLVLokdConSXhSEjqVLgmdSqfSJaFTOUnCm4o1SrFGKdYo8Qf/sCT8JpWTJHQqXRJOVO4o1ijFGqVYo8Qf3JCE36TypCR0Kl0STlROknCi8qRijVKsUYo1ysXDVJ6UhJMkdConSThJwonKHSpvKtYoxRqlWKNcvCwJn1C5IwmdSqfSJaFTOUlCp9IloVPpktCpPKlYoxRrlGKNcrFelYRO5U3FGqVYoxRrlIthVE6S0Kl0SehUOpUuCd+kWKMUa5RijXLxMpU3qXRJ6FQ6lROVkyScqHRJ+E3FGqVYoxRrlIuHJeE3JaFT6ZJwotIloVPpVLokfCIJncqTijVKsUYp1ijxB2uMYo1SrFGKNUqxRinWKMUapVijFGuUYo1SrFGKNUqxRinWKMUapVij/AEL1wbm+HRV1wAAAABJRU5ErkJggg==)](url5)\ntext5\n'
+    );
+  });
+  it('should not convert the url of link that surround dummy image to DataURL', async () => {
+    const tree = fromMarkdown(
+      '# title5\n\n[![alt5](/path/to/qrcode.png)](url5)\ntext5'
+    );
+    await toImageDataURL(tree);
+    expect(toMarkdown(tree)).toEqual(
+      '# title5\n\n[![alt5](/path/to/qrcode.png)](url5)\ntext5\n'
+    );
+  });
 });

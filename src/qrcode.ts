@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { Root, Image } from 'mdast';
+import { Root, Image, Link } from 'mdast';
 import QRCode from 'qrcode';
 
 const dummyQrcodeFile = 'mdast-qrcode';
@@ -27,6 +27,24 @@ export async function byImage(
   }
 }
 
+export async function byLink(
+  tree: Link,
+  options?: QRCode.QRCodeToDataURLOptions
+) {
+  const ll = tree.children.length;
+  if (ll === 1) {
+    const cc = tree.children[0];
+    if (cc.type === 'image') {
+      const image: Image = cc;
+      const url: string = image.url || '';
+      if (path.parse(url).name === dummyQrcodeFile) {
+        const d = await QRCode.toDataURL(tree.url, options);
+        image.url = d;
+      }
+    }
+  }
+}
+
 export async function toImageDataURL(
   tree: Root,
   options?: QRCode.QRCodeToDataURLOptions
@@ -41,6 +59,8 @@ export async function toImageDataURL(
           const cc = c.children[ii];
           if (cc.type === 'image') {
             await byImage(cc, options);
+          } else if (cc.type === 'link') {
+            await byLink(cc, options);
           }
         }
       }

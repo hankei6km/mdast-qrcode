@@ -1,5 +1,6 @@
 import * as path from 'path';
 import { Root, Content, Image, Link } from 'mdast';
+import { createCanvas, loadImage } from 'canvas';
 import QRCode from 'qrcode';
 
 const dummyQrcodeFile = 'mdast-qrcode';
@@ -12,6 +13,31 @@ const QRCodeSourcKindeValues = [
 ] as const;
 export type QRCodeSourcKinde = typeof QRCodeSourcKindeValues[number];
 
+export async function qrcodeToDataURL(
+  data: string,
+  inOptions: QRCode.QRCodeToDataURLOptions = {
+    errorCorrectionLevel: 'H',
+    margin: 4,
+    scale: 4,
+    color: {
+      dark: '#000000',
+      light: '#ffffff'
+    }
+  }
+) {
+  // https://stackoverflow.com/questions/64910446/how-to-add-logo-in-the-middle-of-the-qr-code-using-nodejs
+  const options = Object.assign({}, inOptions);
+  options.errorCorrectionLevel = 'H';
+
+  const qrImg = await loadImage(await QRCode.toDataURL(data, options));
+  const canvas = createCanvas(qrImg.width, qrImg.height);
+
+  const ctx = canvas.getContext('2d');
+  // const center = (width - cwidth) / 2;
+  ctx.drawImage(qrImg, 0, 0, qrImg.width, qrImg.height);
+  return canvas.toDataURL('image/png');
+}
+
 export async function byImageScheme(
   image: Image,
   options?: QRCode.QRCodeToDataURLOptions
@@ -19,7 +45,8 @@ export async function byImageScheme(
   const url: string = image.url || '';
   // as scheme
   const text = url.slice(7); // 'qrcode:'.length = 7
-  const d = await QRCode.toDataURL(text, options);
+  //const d = await QRCode.toDataURL(text, options);
+  const d = await qrcodeToDataURL(text);
   image.url = d;
 }
 
@@ -31,7 +58,8 @@ export async function byImageDummy(
   // as alt
   const m = alt.match(qrcodeInAlt);
   if (m && m[3]) {
-    const d = await QRCode.toDataURL(m[3], options);
+    //const d = await QRCode.toDataURL(m[3], options);
+    const d = await qrcodeToDataURL(m[3]);
     image.alt = m[2] || '';
     image.url = d;
   }
@@ -46,7 +74,8 @@ export async function byLinkImageDummy(
     const image: Image = cc;
     const url: string = image.url || '';
     if (path.parse(url).name === dummyQrcodeFile) {
-      const d = await QRCode.toDataURL(tree.url, options);
+      //const d = await QRCode.toDataURL(tree.url, options);
+      const d = await qrcodeToDataURL(tree.url);
       image.url = d;
     }
   }

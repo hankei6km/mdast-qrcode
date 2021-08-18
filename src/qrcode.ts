@@ -1,50 +1,59 @@
-import * as path from 'path';
-import { Root, Image, Link } from 'mdast';
+import { Root, Content, Image, Link } from 'mdast';
 import QRCode from 'qrcode';
+import { generateQRCode } from './lib/generate';
+import { selectTarget } from './lib/select';
 
-const dummyQrcodeFile = 'mdast-qrcode';
 const qrcodeInAlt = /(^|(^.*):)qrcode:(.+)$/;
+const QRCodeSourcKindValues = [
+  '',
+  'image-scheme',
+  'image-dummy',
+  'link-image-dummy'
+] as const;
+export type QRCodeSourcKind = typeof QRCodeSourcKindValues[number];
 
-export async function byImage(
-  image: Image,
+export async function byImageScheme(
+  tree: Content[],
   options?: QRCode.QRCodeToDataURLOptions
 ) {
+  const image = tree[0] as Image;
   const url: string = image.url || '';
-  const alt: string = image.alt || '';
-  if (url.startsWith('qrcode:')) {
-    // as scheme
-    const text = url.slice(7); // 'qrcode:'.length = 7
-    const d = await QRCode.toDataURL(text, options);
-    image.url = d;
-  } else if (path.parse(url).name === dummyQrcodeFile) {
-    // as alt
-    const m = alt.match(qrcodeInAlt);
-    if (m && m[3]) {
-      const d = await QRCode.toDataURL(m[3], options);
-      image.alt = m[2] || '';
-      image.url = d;
-    }
-  }
+  // as scheme
+  const text = url.slice(7); // 'qrcode:'.length = 7
+  //const d = await QRCode.toDataURL(text, options);
+  const d = await generateQRCode(text);
+  image.url = d;
 }
 
-export async function byLink(
-  tree: Link,
+export async function byImageDummy(
+  tree: Content[],
   options?: QRCode.QRCodeToDataURLOptions
 ) {
-  const ll = tree.children.length;
-  if (ll === 1) {
-    const cc = tree.children[0];
-    if (cc.type === 'image') {
-      const image: Image = cc;
-      const url: string = image.url || '';
-      if (path.parse(url).name === dummyQrcodeFile) {
-        const d = await QRCode.toDataURL(tree.url, options);
-        image.url = d;
-      }
-    }
+  const image = tree[0] as Image;
+  const alt: string = image.alt || '';
+  // as alt
+  const m = alt.match(qrcodeInAlt);
+  if (m && m[3]) {
+    //const d = await QRCode.toDataURL(m[3], options);
+    const d = await generateQRCode(m[3]);
+    image.alt = m[2] || '';
+    image.url = d;
   }
 }
 
+export async function byLinkImageDummy(
+  tree: Content[],
+  options?: QRCode.QRCodeToDataURLOptions
+) {
+  const link = tree[0] as Link;
+  const cc = link.children[0];
+  if (cc.type === 'image') {
+    const image: Image = cc;
+    //const d = await QRCode.toDataURL(tree.url, options);
+    const d = await generateQRCode(link.url);
+    image.url = d;
+  }
+}
 export async function toImageDataURL(
   tree: Root,
   options?: QRCode.QRCodeToDataURLOptions
@@ -55,12 +64,16 @@ export async function toImageDataURL(
       const c = tree.children[i];
       if (c.type === 'paragraph') {
         const ll = c.children.length;
-        for (let ii = 0; ii < ll; ii++) {
-          const cc = c.children[ii];
-          if (cc.type === 'image') {
-            await byImage(cc, options);
-          } else if (cc.type === 'link') {
-            await byLink(cc, options);
+        for (let ii = 0; ii < ll; ii = ii + 1) {
+          //const cc: Content[] = [c.children[ii]];
+          const [kind, cc] = selectTarget(c.children, ii);
+
+          if (kind === 'image-scheme') {
+            await byImageScheme(cc, options);
+          } else if (kind === 'image-dummy') {
+            await byImageDummy(cc, options);
+          } else if (kind === 'link-image-dummy') {
+            await byLinkImageDummy(cc, options);
           }
         }
       }

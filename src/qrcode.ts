@@ -66,14 +66,14 @@ export async function toImageDataURL(
         const ll = c.children.length;
         for (let ii = 0; ii < ll; ii = ii + 1) {
           //const cc: Content[] = [c.children[ii]];
-          const [kind, cc] = selectTarget(c.children, ii);
+          const targetInfo = selectTarget(c.children, ii);
 
-          if (kind === 'image-scheme') {
-            await byImageScheme(cc, options);
-          } else if (kind === 'image-dummy') {
-            await byImageDummy(cc, options);
-          } else if (kind === 'link-image-dummy') {
-            await byLinkImageDummy(cc, options);
+          if (targetInfo.kind === 'image-scheme') {
+            await byImageScheme(targetInfo.qrContent, options);
+          } else if (targetInfo.kind === 'image-dummy') {
+            await byImageDummy(targetInfo.qrContent, options);
+          } else if (targetInfo.kind === 'link-image-dummy') {
+            await byLinkImageDummy(targetInfo.qrContent, options);
           }
         }
       }

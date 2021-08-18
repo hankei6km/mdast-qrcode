@@ -45,17 +45,25 @@ export function pickLogo(c: Content[], idx: number): number[] {
 export function selectTarget(
   c: Content[],
   idx: number
-): [QRCodeSourcKind, Content[]] {
-  const ret: [QRCodeSourcKind, Content[]] = ['', []];
+): { kind: QRCodeSourcKind; qrContent: Content[]; removeIdxs: number[] } {
+  const ret: {
+    kind: QRCodeSourcKind;
+    qrContent: Content[];
+    removeIdxs: number[];
+  } = {
+    kind: '',
+    qrContent: [],
+    removeIdxs: []
+  };
   const top = c[idx];
   if (top.type === 'image') {
     const url: string = top.url || '';
     if (url.startsWith('qrcode:')) {
       // as scheme
-      ret[0] = 'image-scheme';
+      ret.kind = 'image-scheme';
     } else if (path.parse(url).name === dummyQrcodeFile) {
       // as alt
-      ret[0] = 'image-dummy';
+      ret.kind = 'image-dummy';
     }
   } else if (top.type === 'link') {
     const ll = top.children.length;
@@ -65,14 +73,19 @@ export function selectTarget(
         const image: Image = cc;
         const url: string = image.url || '';
         if (path.parse(url).name === dummyQrcodeFile) {
-          ret[0] = 'link-image-dummy';
+          ret.kind = 'link-image-dummy';
         }
       }
     }
   }
-  if (ret[0] !== '') {
-    ret[1].push(top);
-    pickLogo(c, idx);
+  if (ret.kind !== '') {
+    ret.qrContent.push(top);
+    const logoIdxs = pickLogo(c, idx);
+    const llen = logoIdxs.length;
+    if (llen > 0) {
+      ret.qrContent.push(c[logoIdxs[llen - 1]]);
+      ret.removeIdxs = logoIdxs;
+    }
   }
   return ret;
 }

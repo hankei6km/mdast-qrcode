@@ -1,6 +1,6 @@
 import fromMarkdown from 'mdast-util-from-markdown';
 import toMarkdown from 'mdast-util-to-markdown';
-import { toImageDataURL } from './qrcode';
+import { addRemoveIdxs, toImageDataURL } from './qrcode';
 
 jest.mock('./lib/generate', () => {
   const mockGenerateQRCode = jest.fn();
@@ -24,6 +24,17 @@ jest.mock('./lib/generate', () => {
 
 afterEach(() => {
   require('./lib/generate')._reset();
+});
+
+describe('addRemoveIdxs()', () => {
+  it('should add uniqe idx', () => {
+    const r = [10, 20];
+    addRemoveIdxs(r, [5, 4]);
+    addRemoveIdxs(r, [10]);
+    addRemoveIdxs(r, [20]);
+    addRemoveIdxs(r, [30]);
+    expect(r).toEqual([10, 20, 5, 4, 30]);
+  });
 });
 
 describe('toDataURL()', () => {
@@ -73,6 +84,15 @@ describe('toDataURL()', () => {
     await toImageDataURL(tree);
     expect(toMarkdown(tree)).toEqual(
       '# title5\n\n[![alt5](/path/to/qrcode.png)](url5)\ntext5\n'
+    );
+  });
+  it('should convert "qrcode:" with logo them remove logo contents', async () => {
+    const tree = fromMarkdown(
+      '# title6\n\ntest6-1\n![alt6](qrcode:test6)\n![](https://hankei6km.github.io/logo.png)\ntext6-2'
+    );
+    await toImageDataURL(tree);
+    expect(toMarkdown(tree)).toEqual(
+      '# title6\n\ntest6-1\n![alt6](data:test6)\ntext6-2\n'
     );
   });
 });

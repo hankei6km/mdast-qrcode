@@ -1,4 +1,3 @@
-import { toDataURL } from 'qrcode';
 import { generateQRCode } from './generate';
 
 jest.mock('canvas', () => {
@@ -66,7 +65,7 @@ afterEach(() => {
 });
 
 describe('generateQRCode()', () => {
-  it('should generate without logo', async () => {
+  it('should generate QRCode', async () => {
     const res = generateQRCode('test data1');
     expect(await res).toEqual('check');
     const {
@@ -95,6 +94,47 @@ describe('generateQRCode()', () => {
       { width: 100, height: 100 },
       0,
       0,
+      100,
+      100
+    ]);
+  });
+  it('should generate QRCode with logo', async () => {
+    const res = generateQRCode('test data1', 'logo');
+    expect(await res).toEqual('check');
+    const {
+      mockLoadImage,
+      mockCreateCanvas,
+      mockDrawImage
+    } = require('canvas')._getMocks();
+    const { mockToDataURL } = require('qrcode')._getMocks();
+    expect(mockLoadImage.mock.calls.length).toEqual(2);
+    expect(mockLoadImage.mock.calls[0][0]).toEqual('logo');
+    expect(mockLoadImage.mock.calls[1][0]).toEqual('data:qrcode');
+    expect(mockToDataURL.mock.calls[0]).toEqual([
+      'test data1',
+      {
+        errorCorrectionLevel: 'H',
+        margin: 4,
+        scale: 4,
+        color: {
+          dark: '#000000',
+          light: '#ffffff'
+        }
+      }
+    ]);
+    expect(mockCreateCanvas.mock.calls[0]).toEqual([200, 200]);
+    expect(mockDrawImage.mock.calls.length).toEqual(2);
+    expect(mockDrawImage.mock.calls[0]).toEqual([
+      { width: 200, height: 200 },
+      0,
+      0,
+      200,
+      200
+    ]);
+    expect(mockDrawImage.mock.calls[1]).toEqual([
+      { width: 100, height: 100 },
+      50,
+      50,
       100,
       100
     ]);

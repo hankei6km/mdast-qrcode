@@ -20,8 +20,8 @@ export async function byImageScheme(
   const url: string = image.url || '';
   // as scheme
   const text = url.slice(7); // 'qrcode:'.length = 7
-  //const d = await QRCode.toDataURL(text, options);
-  const d = await generateQRCode(text);
+  const logo = tree.length > 1 ? (tree[1] as Image).url || '' : '';
+  const d = await generateQRCode(text, logo, options);
   image.url = d;
 }
 
@@ -35,7 +35,8 @@ export async function byImageDummy(
   const m = alt.match(qrcodeInAlt);
   if (m && m[3]) {
     //const d = await QRCode.toDataURL(m[3], options);
-    const d = await generateQRCode(m[3]);
+    const logo = tree.length > 1 ? (tree[1] as Image).url || '' : '';
+    const d = await generateQRCode(m[3], logo, options);
     image.alt = m[2] || '';
     image.url = d;
   }
@@ -50,10 +51,20 @@ export async function byLinkImageDummy(
   if (cc.type === 'image') {
     const image: Image = cc;
     //const d = await QRCode.toDataURL(tree.url, options);
-    const d = await generateQRCode(link.url);
+    const logo = tree.length > 1 ? (tree[1] as Image).url || '' : '';
+    const d = await generateQRCode(link.url, logo, options);
     image.url = d;
   }
 }
+
+export function addRemoveIdxs(r: number[], a: number[]) {
+  a.forEach((i) => {
+    if (!r.includes(i)) {
+      r.push(i);
+    }
+  });
+}
+
 export async function toImageDataURL(
   tree: Root,
   options?: QRCode.QRCodeToDataURLOptions
@@ -63,18 +74,25 @@ export async function toImageDataURL(
     for (let i = 0; i < l; i++) {
       const c = tree.children[i];
       if (c.type === 'paragraph') {
+        const removeIdxs: number[] = [];
         const ll = c.children.length;
         for (let ii = 0; ii < ll; ii = ii + 1) {
           //const cc: Content[] = [c.children[ii]];
-          const [kind, cc] = selectTarget(c.children, ii);
+          const targetInfo = selectTarget(c.children, ii);
 
-          if (kind === 'image-scheme') {
-            await byImageScheme(cc, options);
-          } else if (kind === 'image-dummy') {
-            await byImageDummy(cc, options);
-          } else if (kind === 'link-image-dummy') {
-            await byLinkImageDummy(cc, options);
+          if (targetInfo.kind === 'image-scheme') {
+            await byImageScheme(targetInfo.qrContent, options);
+            addRemoveIdxs(removeIdxs, targetInfo.removeIdxs);
+          } else if (targetInfo.kind === 'image-dummy') {
+            await byImageDummy(targetInfo.qrContent, options);
+            addRemoveIdxs(removeIdxs, targetInfo.removeIdxs);
+          } else if (targetInfo.kind === 'link-image-dummy') {
+            await byLinkImageDummy(targetInfo.qrContent, options);
+            addRemoveIdxs(removeIdxs, targetInfo.removeIdxs);
           }
+        }
+        if (removeIdxs.length > 0) {
+          c.children = c.children.filter((t, i) => !removeIdxs.includes(i));
         }
       }
     }

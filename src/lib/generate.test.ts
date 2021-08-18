@@ -1,4 +1,3 @@
-import { toDataURL } from 'qrcode';
 import { generateQRCode } from './generate';
 
 jest.mock('canvas', () => {

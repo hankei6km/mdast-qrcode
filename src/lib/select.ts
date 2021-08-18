@@ -1,14 +1,14 @@
 import * as path from 'path';
 import { Content, Image } from 'mdast';
-import { QRCodeSourcKinde } from '../qrcode';
+import { QRCodeSourcKind } from '../qrcode';
 
 const dummyQrcodeFile = 'mdast-qrcode';
 
 export function selectTarget(
   c: Content[],
   idx: number
-): [QRCodeSourcKinde, Content[]] {
-  const ret: [QRCodeSourcKinde, Content[]] = ['', []];
+): [QRCodeSourcKind, Content[]] {
+  const ret: [QRCodeSourcKind, Content[]] = ['', []];
   const top = c[idx];
   if (top.type === 'image') {
     const url: string = top.url || '';

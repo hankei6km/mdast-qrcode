@@ -4,13 +4,13 @@ import { generateQRCode } from './lib/generate';
 import { selectTarget } from './lib/select';
 
 const qrcodeInAlt = /(^|(^.*):)qrcode:(.+)$/;
-const QRCodeSourcKindeValues = [
+const QRCodeSourcKindValues = [
   '',
   'image-scheme',
   'image-dummy',
   'link-image-dummy'
 ] as const;
-export type QRCodeSourcKinde = typeof QRCodeSourcKindeValues[number];
+export type QRCodeSourcKind = typeof QRCodeSourcKindValues[number];
 
 export async function byImageScheme(
   tree: Content[],

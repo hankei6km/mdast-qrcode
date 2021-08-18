@@ -79,4 +79,13 @@ describe('selectTarget()', () => {
     expect(sel.kind).toEqual('');
     expect(sel.qrContent.length).toEqual(0);
   });
+  it('should return "link-image-dummy" and iamge contents', async () => {
+    const tree = fromMarkdown(
+      '[![alt4](/path/to/mdast-qrcode.png)](url4)\n![](https://hankei6km.github.io/logo.png)'
+    );
+    const c: Content[] = tree.children[0].children as Content[];
+    const sel = selectTarget(c, 0);
+    expect(sel.kind).toEqual('link-image-dummy');
+    expect(sel.qrContent).toEqual([c[0], c[2]]);
+  });
 });

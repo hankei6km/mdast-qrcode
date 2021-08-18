@@ -20,8 +20,8 @@ export async function byImageScheme(
   const url: string = image.url || '';
   // as scheme
   const text = url.slice(7); // 'qrcode:'.length = 7
-  //const d = await QRCode.toDataURL(text, options);
-  const d = await generateQRCode(text);
+  const logo = tree.length > 1 ? (tree[1] as Image).url || '' : '';
+  const d = await generateQRCode(text, logo, options);
   image.url = d;
 }
 
@@ -35,7 +35,8 @@ export async function byImageDummy(
   const m = alt.match(qrcodeInAlt);
   if (m && m[3]) {
     //const d = await QRCode.toDataURL(m[3], options);
-    const d = await generateQRCode(m[3]);
+    const logo = tree.length > 1 ? (tree[1] as Image).url || '' : '';
+    const d = await generateQRCode(m[3], logo, options);
     image.alt = m[2] || '';
     image.url = d;
   }
@@ -50,7 +51,8 @@ export async function byLinkImageDummy(
   if (cc.type === 'image') {
     const image: Image = cc;
     //const d = await QRCode.toDataURL(tree.url, options);
-    const d = await generateQRCode(link.url);
+    const logo = tree.length > 1 ? (tree[1] as Image).url || '' : '';
+    const d = await generateQRCode(link.url, logo, options);
     image.url = d;
   }
 }

@@ -95,4 +95,26 @@ describe('toDataURL()', () => {
       '# title6\n\ntest6-1\n![alt6](data:test6)\ntext6-2\n'
     );
   });
+  it('should pass options from file name(image)', async () => {
+    const tree = fromMarkdown(
+      '# title7\n\n![alt7:qrcode:test7](/path/to/mdast-qrcode-width-125.png)\ntext7'
+    );
+    await toImageDataURL(tree);
+    const { mockGenerateQRCode } = require('./lib/generate')._getMocks();
+    expect(mockGenerateQRCode.mock.calls[0][2]).toEqual({
+      width: 125,
+      color: {}
+    });
+  });
+  it('should pass options from file name(link)', async () => {
+    const tree = fromMarkdown(
+      '# title8\n\n[![alt8](/path/to/mdast-qrcode-width-125.png)](url8)\ntext8'
+    );
+    await toImageDataURL(tree);
+    const { mockGenerateQRCode } = require('./lib/generate')._getMocks();
+    expect(mockGenerateQRCode.mock.calls[0][2]).toEqual({
+      width: 125,
+      color: {}
+    });
+  });
 });

@@ -61,7 +61,7 @@ export function selectTarget(
     if (url.startsWith('qrcode:')) {
       // as scheme
       ret.kind = 'image-scheme';
-    } else if (path.parse(url).name === dummyQrcodeFile) {
+    } else if (path.parse(url).name.startsWith(dummyQrcodeFile)) {
       // as alt
       ret.kind = 'image-dummy';
     }
@@ -72,7 +72,7 @@ export function selectTarget(
       if (cc.type === 'image') {
         const image: Image = cc;
         const url: string = image.url || '';
-        if (path.parse(url).name === dummyQrcodeFile) {
+        if (path.parse(url).name.startsWith(dummyQrcodeFile)) {
           ret.kind = 'link-image-dummy';
         }
       }

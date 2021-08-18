@@ -56,6 +56,15 @@ export async function byLinkImageDummy(
     image.url = d;
   }
 }
+
+export function addRemoveIdxs(r: number[], a: number[]) {
+  a.forEach((i) => {
+    if (!r.includes(i)) {
+      r.push(i);
+    }
+  });
+}
+
 export async function toImageDataURL(
   tree: Root,
   options?: QRCode.QRCodeToDataURLOptions
@@ -65,6 +74,7 @@ export async function toImageDataURL(
     for (let i = 0; i < l; i++) {
       const c = tree.children[i];
       if (c.type === 'paragraph') {
+        const removeIdxs: number[] = [];
         const ll = c.children.length;
         for (let ii = 0; ii < ll; ii = ii + 1) {
           //const cc: Content[] = [c.children[ii]];
@@ -72,11 +82,17 @@ export async function toImageDataURL(
 
           if (targetInfo.kind === 'image-scheme') {
             await byImageScheme(targetInfo.qrContent, options);
+            addRemoveIdxs(removeIdxs, targetInfo.removeIdxs);
           } else if (targetInfo.kind === 'image-dummy') {
             await byImageDummy(targetInfo.qrContent, options);
+            addRemoveIdxs(removeIdxs, targetInfo.removeIdxs);
           } else if (targetInfo.kind === 'link-image-dummy') {
             await byLinkImageDummy(targetInfo.qrContent, options);
+            addRemoveIdxs(removeIdxs, targetInfo.removeIdxs);
           }
+        }
+        if (removeIdxs.length > 0) {
+          c.children = c.children.filter((t, i) => !removeIdxs.includes(i));
         }
       }
     }

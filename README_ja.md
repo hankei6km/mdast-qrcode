@@ -91,6 +91,68 @@ yield:
 text5
 ```
 
+### ファイル名から options を渡す
+
+code:
+
+```typescript
+import fromMarkdown from 'mdast-util-from-markdown';
+import toMarkdown from 'mdast-util-to-markdown';
+import { toImageDataURL } from './qrcode';
+
+(async () => {
+  const tree = fromMarkdown(
+    '# title6\n\n![alt6:qrcode:test6](/path/to/mdast-qrcode-margin-1-width-250.png)\ntext6'
+  );
+  await toImageDataURL(tree);
+  console.log(toMarkdown(tree));
+})();
+```
+
+yield:
+
+```markdown
+# title6
+
+[![alt6](data:image/png;base64,iVBORw0KGgoAAAAN ...snip ...=)](url6)
+text6
+```
+
+options:
+
+- margin: `-margin-<number>`
+- scale: `-scale-<number>`
+- width: `-width-<number>`
+- colorr.light: `-color-light-<#RRGGBBAA>` 
+- color.dark: `-color-light-<#RRGGBBAA>` 
+
+
+### 画像の連続記述でロゴを重ねる
+
+code:
+
+```typescript
+import fromMarkdown from 'mdast-util-from-markdown';
+import toMarkdown from 'mdast-util-to-markdown';
+import { toImageDataURL } from './qrcode';
+
+(async () => {
+  const tree = fromMarkdown(
+    '# title7\n\n[![alt7](/path/to/mdast-qrcode.png)](url7)\n![](https://hankei6km.github.io/logo.png)\ntext7'
+  );
+  await toImageDataURL(tree);
+  console.log(toMarkdown(tree));
+})();
+```
+
+yield:
+
+```markdown
+# title6
+
+[![alt7](data:image/png;base64,iVBORw0KGgoAAAAN ...snip ...=)](url7)
+text7
+```
 
 ## API
 
@@ -99,7 +161,10 @@ text5
 [mdast](https://github.com/syntax-tree/mdast) の画像に含まれる "qrcode:" を変換。
 画像は `root / paragraph / image` または `root / paragraph / link / image`  階層のみサポートしている。
 
-#### options`
+QRCode の直後に `image` がある場合、その `image` はロゴ画像として扱われる。
+
+
+#### options
 
 options は [QRCode,toDataURL](https://www.npmjs.com/package/qrcode#todataurltext-options-cberror-url-1) へ渡される。
 

@@ -34,7 +34,7 @@ jobs:
     # https://dev.classmethod.jp/articles/github-actions-npm-automatic-release/
     # activity type を published へ変更したので念の為
     - name: can-npm-publish
-      run: npx can-npm-publish
+      run: npx can-npm-publish --verbose
 
     - name: Install modules
       run: npm ci

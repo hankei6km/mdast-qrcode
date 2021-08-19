@@ -21,8 +21,8 @@ const optionsDecoderLogo = [
     decoder: /.+-logo_position-(center|right-bottom)(-|$)/
   },
   {
-    name: 'padding',
-    decoder: /.+-logo_padding-(\d+)(-|$)/
+    name: 'margin',
+    decoder: /.+-logo_margin-(\d+)(-|$)/
   },
   {
     name: 'fit',

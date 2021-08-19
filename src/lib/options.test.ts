@@ -78,13 +78,13 @@ describe('decodeQRCodeOptionsFromFileName()', () => {
       decodeQRCodeOptionsFromFileName(
         {},
         {},
-        'mdast-qrcode-logo_padding-10-color_light-EEEEEEFF'
+        'mdast-qrcode-logo_margin-10-color_light-EEEEEEFF'
       )
     ).toEqual([
       {
         color: { light: '#EEEEEEFF' }
       },
-      { padding: 10 }
+      { margin: 10 }
     ]);
   });
 });

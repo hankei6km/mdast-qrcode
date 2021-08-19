@@ -1,5 +1,7 @@
 import { generateQRCode } from './generate';
 
+const consoleErrror = console.error;
+
 jest.mock('canvas', () => {
   const mockDrawImage = jest.fn();
   const mockGetContext = jest.fn();
@@ -60,6 +62,7 @@ jest.mock('qrcode', () => {
 });
 
 afterEach(() => {
+  console.error = consoleErrror;
   require('canvas')._reset();
   require('qrcode')._reset();
 });
@@ -233,6 +236,8 @@ describe('generateQRCode()', () => {
     ]);
   });
   it('should skip logo image at loadImage failed', async () => {
+    const mockConsoleError = jest.fn();
+    console.error = mockConsoleError;
     const { mockLoadImage } = require('canvas')._getMocks();
     mockLoadImage.mockReset();
     mockLoadImage
@@ -243,6 +248,10 @@ describe('generateQRCode()', () => {
       });
     const res = generateQRCode('test data1', 'logo', {}, { fit: 0 });
     expect(await res).toEqual('check');
+    expect(mockConsoleError.mock.calls.length).toEqual(1);
+    expect(mockConsoleError.mock.calls[0][0]).toEqual(
+      'logo loadImage: load image failed'
+    );
     const { mockDrawImage } = require('canvas')._getMocks();
     expect(mockDrawImage.mock.calls.length).toEqual(1);
     expect(mockDrawImage.mock.calls[0]).toEqual([

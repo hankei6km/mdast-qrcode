@@ -76,11 +76,11 @@ https://github.com/hankei6km/mdast-qrcode
 source:
 
 ```markdown
-![h:200:qrcode:https://github.com/hankei6km/mdast-qrcode](mdast-qrcode-color-dark-#2563EBFF.png)
+![h:200:qrcode:https://github.com/hankei6km/mdast-qrcode](mdast-qrcode-color-dark-#563EBFF.png)
 https://github.com/hankei6km/mdast-qrcode
 ```
 
 yield:
 
-![h:200:qrcode:https://github.com/hankei6km/mdast-qrcode](mdast-qrcode-color-dark-#2563EBFF.png)
+![h:200:qrcode:https://github.com/hankei6km/mdast-qrcode](mdast-qrcode-color-dark-2563EBFF.png)
 https://github.com/hankei6km/mdast-qrcode

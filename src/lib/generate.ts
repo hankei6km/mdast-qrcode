@@ -1,6 +1,6 @@
 import { createCanvas, loadImage } from 'canvas';
 import QRCode from 'qrcode';
-import { LogoOptions } from '../qrcode';
+import { LogoOptions, logoOptionsDefaults } from '../qrcode';
 
 export async function generateQRCode(
   data: string,
@@ -26,12 +26,14 @@ export async function generateQRCode(
     options.errorCorrectionLevel = 'H';
   }
   const logoOptions = Object.assign({}, inLogoOptions);
-  if (!logoOptions.hasOwnProperty('position')) {
-    logoOptions.position = 'center';
-  }
-  if (!logoOptions.hasOwnProperty('padding')) {
-    logoOptions.padding = 4;
-  }
+  const logoPosition =
+    logoOptions.position !== undefined ? logoOptions.position : 'center';
+  const logoPadding =
+    logoOptions.padding !== undefined
+      ? logoOptions.padding
+      : logoOptionsDefaults.padding;
+  const logoFit =
+    logoOptions.fit !== undefined ? logoOptions.fit : logoOptionsDefaults.fit;
 
   const qrImg = await loadImage(await QRCode.toDataURL(data, options));
   const canvas = createCanvas(qrImg.width, qrImg.height);
@@ -40,15 +42,29 @@ export async function generateQRCode(
   // const center = (width - cwidth) / 2;
   ctx.drawImage(qrImg, 0, 0, qrImg.width, qrImg.height);
   if (logoImg) {
+    let w = logoImg.width;
+    let h = logoImg.height;
+    if (logoFit > 0) {
+      const fitSize = (qrImg.width * logoFit) / 100;
+      w = fitSize;
+      h = fitSize;
+      if (logoImg.width > logoImg.height) {
+        w = fitSize;
+        h = (logoImg.height * fitSize) / logoImg.width;
+      } else if (logoImg.width < logoImg.height) {
+        w = (logoImg.width * fitSize) / logoImg.height;
+        h = fitSize;
+      }
+    }
     const x =
-      logoOptions.position === 'center'
-        ? (qrImg.width - logoImg.width) / 2
-        : qrImg.width - (logoImg.width + (logoOptions.padding || 4));
+      logoPosition === 'center'
+        ? (qrImg.width - w) / 2
+        : qrImg.width - (w + logoPadding);
     const y =
-      logoOptions.position === 'center'
-        ? (qrImg.height - logoImg.height) / 2
-        : qrImg.height - (logoImg.height + (logoOptions.padding || 4));
-    ctx.drawImage(logoImg, x, y, logoImg.width, logoImg.height);
+      logoPosition === 'center'
+        ? (qrImg.height - h) / 2
+        : qrImg.height - (h + logoPadding);
+    ctx.drawImage(logoImg, x, y, w, h);
   }
   return canvas.toDataURL('image/png');
 }

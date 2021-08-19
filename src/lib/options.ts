@@ -23,6 +23,10 @@ const optionsDecoderLogo = [
   {
     name: 'logo-padding',
     decoder: /.+-logo-padding-(\d+)(-|$)/
+  },
+  {
+    name: 'logo-fit',
+    decoder: /.+-logo-fit-(\d+)(-|$)/
   }
 ];
 export function decodeQRCodeOptionsFromFileName(
@@ -52,10 +56,11 @@ export function decodeQRCodeOptionsFromFileName(
   optionsDecoderLogo.forEach((o) => {
     const m = fileName.match(o.decoder);
     if (m) {
-      if (o.name === 'logo-padding') {
-        retLogoOptions[o.name.replace(/^logo-/, '')] = parseInt(m[1], 10);
-      } else {
+      // TODO: decoder 側で型を指定できるように.
+      if (o.name === 'logo-position') {
         retLogoOptions[o.name.replace(/^logo-/, '')] = m[1];
+      } else {
+        retLogoOptions[o.name.replace(/^logo-/, '')] = parseInt(m[1], 10);
       }
     }
   });

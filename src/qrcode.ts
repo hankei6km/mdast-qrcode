@@ -16,6 +16,12 @@ export type QRCodeSourcKind = typeof QRCodeSourcKindValues[number];
 export type LogoOptions = {
   position?: 'center' | 'right-bottom';
   padding?: number;
+  fit?: number;
+};
+export const logoOptionsDefaults: Required<LogoOptions> = {
+  position: 'center',
+  padding: 16,
+  fit: 30
 };
 
 export async function byImageScheme(

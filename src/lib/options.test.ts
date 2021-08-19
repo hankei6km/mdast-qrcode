@@ -27,12 +27,12 @@ describe('decodeQRCodeOptionsFromFileName()', () => {
       color: {}
     });
     expect(
-      decodeQRCodeOptionsFromFileName({}, 'mdast-qrcode-color-dark-#111111FF')
+      decodeQRCodeOptionsFromFileName({}, 'mdast-qrcode-color-dark-111111FF')
     ).toEqual({
       color: { dark: '#111111FF' }
     });
     expect(
-      decodeQRCodeOptionsFromFileName({}, 'mdast-qrcode-color-light-#EEEEEEFF')
+      decodeQRCodeOptionsFromFileName({}, 'mdast-qrcode-color-light-EEEEEEFF')
     ).toEqual({
       color: { light: '#EEEEEEFF' }
     });

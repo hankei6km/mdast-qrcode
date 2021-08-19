@@ -11,8 +11,8 @@ const optionsDecoderNum = [
 ];
 const optionsDecoderColor = [
   // TODO: regexp の指定を RGBA の長さに合わせる
-  { name: 'dark', decoder: /.+-color-dark-(#[0-9A-Fa-f]+)(-|$)/ },
-  { name: 'light', decoder: /.+-color-light-(#[0-9A-Fa-f]+)(-|$)/ }
+  { name: 'dark', decoder: /.+-color-dark-([0-9A-Fa-f]+)(-|$)/ },
+  { name: 'light', decoder: /.+-color-light-([0-9A-Fa-f]+)(-|$)/ }
 ];
 export function decodeQRCodeOptionsFromFileName(
   options: QRCodeToDataURLOptions,
@@ -33,7 +33,7 @@ export function decodeQRCodeOptionsFromFileName(
   optionsDecoderColor.forEach((o) => {
     const m = fileName.match(o.decoder);
     if (m) {
-      ret.color[o.name] = m[1];
+      ret.color[o.name] = `#${m[1]}`;
     }
   });
   return ret;

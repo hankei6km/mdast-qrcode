@@ -139,4 +139,44 @@ describe('generateQRCode()', () => {
       100
     ]);
   });
+  it('should generate QRCode with logo(right-bottom)', async () => {
+    const res = generateQRCode(
+      'test data1',
+      'logo',
+      {},
+      { position: 'right-bottom' }
+    );
+    expect(await res).toEqual('check');
+    const {
+      mockLoadImage,
+      mockCreateCanvas,
+      mockDrawImage
+    } = require('canvas')._getMocks();
+    const { mockToDataURL } = require('qrcode')._getMocks();
+    expect(mockLoadImage.mock.calls.length).toEqual(2);
+    expect(mockLoadImage.mock.calls[0][0]).toEqual('logo');
+    expect(mockLoadImage.mock.calls[1][0]).toEqual('data:qrcode');
+    expect(mockToDataURL.mock.calls[0]).toEqual([
+      'test data1',
+      {
+        errorCorrectionLevel: 'H'
+      }
+    ]);
+    expect(mockCreateCanvas.mock.calls[0]).toEqual([200, 200]);
+    expect(mockDrawImage.mock.calls.length).toEqual(2);
+    expect(mockDrawImage.mock.calls[0]).toEqual([
+      { width: 200, height: 200 },
+      0,
+      0,
+      200,
+      200
+    ]);
+    expect(mockDrawImage.mock.calls[1]).toEqual([
+      { width: 100, height: 100 },
+      96,
+      96,
+      100,
+      100
+    ]);
+  });
 });

@@ -13,10 +13,15 @@ const QRCodeSourcKindValues = [
   'link-image-dummy'
 ] as const;
 export type QRCodeSourcKind = typeof QRCodeSourcKindValues[number];
+export type LogoOptions = {
+  position?: 'center' | 'right-bottom';
+  padding?: number;
+};
 
 export async function byImageScheme(
   tree: Content[],
-  options?: QRCode.QRCodeToDataURLOptions
+  options?: QRCode.QRCodeToDataURLOptions,
+  logoOptions?: LogoOptions
 ) {
   const image = tree[0] as Image;
   const url: string = image.url || '';
@@ -29,7 +34,8 @@ export async function byImageScheme(
 
 export async function byImageDummy(
   tree: Content[],
-  options?: QRCode.QRCodeToDataURLOptions
+  options?: QRCode.QRCodeToDataURLOptions,
+  logoOptions?: LogoOptions
 ) {
   const image = tree[0] as Image;
   const alt: string = image.alt || '';
@@ -42,7 +48,11 @@ export async function byImageDummy(
     const d = await generateQRCode(
       m[3],
       logo,
-      decodeQRCodeOptionsFromFileName(options || {}, fileName)
+      ...decodeQRCodeOptionsFromFileName(
+        options || {},
+        logoOptions || {},
+        fileName
+      )
     );
     image.alt = m[2] || '';
     image.url = d;
@@ -51,7 +61,8 @@ export async function byImageDummy(
 
 export async function byLinkImageDummy(
   tree: Content[],
-  options?: QRCode.QRCodeToDataURLOptions
+  options?: QRCode.QRCodeToDataURLOptions,
+  logoOptions?: LogoOptions
 ) {
   const link = tree[0] as Link;
   const cc = link.children[0];
@@ -63,7 +74,11 @@ export async function byLinkImageDummy(
     const d = await generateQRCode(
       link.url,
       logo,
-      decodeQRCodeOptionsFromFileName(options || {}, fileName)
+      ...decodeQRCodeOptionsFromFileName(
+        options || {},
+        logoOptions || {},
+        fileName
+      )
     );
     image.url = d;
   }
@@ -79,7 +94,8 @@ export function addRemoveIdxs(r: number[], a: number[]) {
 
 export async function toImageDataURL(
   tree: Root,
-  options?: QRCode.QRCodeToDataURLOptions
+  options?: QRCode.QRCodeToDataURLOptions,
+  logoOptions: LogoOptions = { position: 'center' }
 ): Promise<Root> {
   if (tree.type === 'root') {
     const l = tree.children.length;
@@ -93,13 +109,13 @@ export async function toImageDataURL(
           const targetInfo = selectTarget(c.children, ii);
 
           if (targetInfo.kind === 'image-scheme') {
-            await byImageScheme(targetInfo.qrContent, options);
+            await byImageScheme(targetInfo.qrContent, options, logoOptions);
             addRemoveIdxs(removeIdxs, targetInfo.removeIdxs);
           } else if (targetInfo.kind === 'image-dummy') {
-            await byImageDummy(targetInfo.qrContent, options);
+            await byImageDummy(targetInfo.qrContent, options, logoOptions);
             addRemoveIdxs(removeIdxs, targetInfo.removeIdxs);
           } else if (targetInfo.kind === 'link-image-dummy') {
-            await byLinkImageDummy(targetInfo.qrContent, options);
+            await byLinkImageDummy(targetInfo.qrContent, options, logoOptions);
             addRemoveIdxs(removeIdxs, targetInfo.removeIdxs);
           }
         }

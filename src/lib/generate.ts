@@ -1,5 +1,6 @@
 import { createCanvas, loadImage } from 'canvas';
 import QRCode from 'qrcode';
+import { LogoOptions } from '../qrcode';
 
 export async function generateQRCode(
   data: string,
@@ -12,7 +13,8 @@ export async function generateQRCode(
       dark: '#000000',
       light: '#ffffff'
     }
-  }
+  },
+  inLogoOptions: LogoOptions = {}
 ) {
   // https://stackoverflow.com/questions/64910446/how-to-add-logo-in-the-middle-of-the-qr-code-using-nodejs
   // const logoImg = await loadImage(
@@ -23,6 +25,13 @@ export async function generateQRCode(
   if (logoImg) {
     options.errorCorrectionLevel = 'H';
   }
+  const logoOptions = Object.assign({}, inLogoOptions);
+  if (!logoOptions.hasOwnProperty('position')) {
+    logoOptions.position = 'center';
+  }
+  if (!logoOptions.hasOwnProperty('padding')) {
+    logoOptions.padding = 4;
+  }
 
   const qrImg = await loadImage(await QRCode.toDataURL(data, options));
   const canvas = createCanvas(qrImg.width, qrImg.height);
@@ -31,13 +40,15 @@ export async function generateQRCode(
   // const center = (width - cwidth) / 2;
   ctx.drawImage(qrImg, 0, 0, qrImg.width, qrImg.height);
   if (logoImg) {
-    ctx.drawImage(
-      logoImg,
-      (qrImg.width - logoImg.width) / 2,
-      (qrImg.height - logoImg.height) / 2,
-      logoImg.width,
-      logoImg.height
-    );
+    const x =
+      logoOptions.position === 'center'
+        ? (qrImg.width - logoImg.width) / 2
+        : qrImg.width - (logoImg.width + (logoOptions.padding || 4));
+    const y =
+      logoOptions.position === 'center'
+        ? (qrImg.height - logoImg.height) / 2
+        : qrImg.height - (logoImg.height + (logoOptions.padding || 4));
+    ctx.drawImage(logoImg, x, y, logoImg.width, logoImg.height);
   }
   return canvas.toDataURL('image/png');
 }

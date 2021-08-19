@@ -1,4 +1,5 @@
 import { QRCodeToDataURLOptions } from 'qrcode';
+import { LogoOptions } from '../qrcode';
 
 // type OptionsInFileName = {
 //   name: 'margin' | 'scale' | 'width';
@@ -14,27 +15,49 @@ const optionsDecoderColor = [
   { name: 'dark', decoder: /.+-color-dark-([0-9A-Fa-f]+)(-|$)/ },
   { name: 'light', decoder: /.+-color-light-([0-9A-Fa-f]+)(-|$)/ }
 ];
+const optionsDecoderLogo = [
+  {
+    name: 'logo-position',
+    decoder: /.+-logo-position-(center|right-bottom)(-|$)/
+  },
+  {
+    name: 'logo-padding',
+    decoder: /.+-logo-padding-(\d+)(-|$)/
+  }
+];
 export function decodeQRCodeOptionsFromFileName(
   options: QRCodeToDataURLOptions,
+  logoOptions: LogoOptions,
   fileName: string
-): QRCodeToDataURLOptions {
-  const ret: any = Object.assign(
+): [QRCodeToDataURLOptions, LogoOptions] {
+  const retOptions: any = Object.assign(
     {
       color: {}
     },
     options || {}
   );
+  const retLogoOptions: any = Object.assign({}, logoOptions || {});
   optionsDecoderNum.forEach((o) => {
     const m = fileName.match(o.decoder);
     if (m) {
-      ret[o.name] = parseInt(m[1], 10);
+      retOptions[o.name] = parseInt(m[1], 10);
     }
   });
   optionsDecoderColor.forEach((o) => {
     const m = fileName.match(o.decoder);
     if (m) {
-      ret.color[o.name] = `#${m[1]}`;
+      retOptions.color[o.name] = `#${m[1]}`;
     }
   });
-  return ret;
+  optionsDecoderLogo.forEach((o) => {
+    const m = fileName.match(o.decoder);
+    if (m) {
+      if (o.name === 'logo-padding') {
+        retLogoOptions[o.name.replace(/^logo-/, '')] = parseInt(m[1], 10);
+      } else {
+        retLogoOptions[o.name.replace(/^logo-/, '')] = m[1];
+      }
+    }
+  });
+  return [retOptions, retLogoOptions];
 }

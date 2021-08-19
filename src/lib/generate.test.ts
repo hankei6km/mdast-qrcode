@@ -232,4 +232,25 @@ describe('generateQRCode()', () => {
       100
     ]);
   });
+  it('should skip logo image at loadImage failed', async () => {
+    const { mockLoadImage } = require('canvas')._getMocks();
+    mockLoadImage.mockReset();
+    mockLoadImage
+      .mockRejectedValueOnce('load image failed')
+      .mockResolvedValueOnce({
+        width: 200,
+        height: 200
+      });
+    const res = generateQRCode('test data1', 'logo', {}, { fit: 0 });
+    expect(await res).toEqual('check');
+    const { mockDrawImage } = require('canvas')._getMocks();
+    expect(mockDrawImage.mock.calls.length).toEqual(1);
+    expect(mockDrawImage.mock.calls[0]).toEqual([
+      { width: 200, height: 200 },
+      0,
+      0,
+      200,
+      200
+    ]);
+  });
 });

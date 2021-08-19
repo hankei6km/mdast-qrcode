@@ -12,21 +12,21 @@ const optionsDecoderNum = [
 ];
 const optionsDecoderColor = [
   // TODO: regexp の指定を RGBA の長さに合わせる
-  { name: 'dark', decoder: /.+-color-dark-([0-9A-Fa-f]+)(-|$)/ },
-  { name: 'light', decoder: /.+-color-light-([0-9A-Fa-f]+)(-|$)/ }
+  { name: 'dark', decoder: /.+-color_dark-([0-9A-Fa-f]+)(-|$)/ },
+  { name: 'light', decoder: /.+-color_light-([0-9A-Fa-f]+)(-|$)/ }
 ];
 const optionsDecoderLogo = [
   {
-    name: 'logo-position',
-    decoder: /.+-logo-position-(center|right-bottom)(-|$)/
+    name: 'position',
+    decoder: /.+-logo_position-(center|right-bottom)(-|$)/
   },
   {
-    name: 'logo-padding',
-    decoder: /.+-logo-padding-(\d+)(-|$)/
+    name: 'padding',
+    decoder: /.+-logo_padding-(\d+)(-|$)/
   },
   {
-    name: 'logo-fit',
-    decoder: /.+-logo-fit-(\d+)(-|$)/
+    name: 'fit',
+    decoder: /.+-logo_fit-(\d+)(-|$)/
   }
 ];
 export function decodeQRCodeOptionsFromFileName(
@@ -57,10 +57,10 @@ export function decodeQRCodeOptionsFromFileName(
     const m = fileName.match(o.decoder);
     if (m) {
       // TODO: decoder 側で型を指定できるように.
-      if (o.name === 'logo-position') {
-        retLogoOptions[o.name.replace(/^logo-/, '')] = m[1];
+      if (o.name === 'position') {
+        retLogoOptions[o.name] = m[1];
       } else {
-        retLogoOptions[o.name.replace(/^logo-/, '')] = parseInt(m[1], 10);
+        retLogoOptions[o.name] = parseInt(m[1], 10);
       }
     }
   });

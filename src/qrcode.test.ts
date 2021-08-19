@@ -119,7 +119,7 @@ describe('toDataURL()', () => {
   });
   it('should pass logo options from file name(image)', async () => {
     const tree = fromMarkdown(
-      '# title9\n\n![alt9:qrcode:test9](/path/to/mdast-qrcode-logo-position-right-bottom.png)\ntext9'
+      '# title9\n\n![alt9:qrcode:test9](/path/to/mdast-qrcode-logo_position-right-bottom.png)\ntext9'
     );
     await toImageDataURL(tree);
     const { mockGenerateQRCode } = require('./lib/generate')._getMocks();
@@ -129,7 +129,7 @@ describe('toDataURL()', () => {
   });
   it('should pass options from file name(link)', async () => {
     const tree = fromMarkdown(
-      '# title10\n\n[![alt10](/path/to/mdast-qrcode-logo-position-right-bottom.png)](url10)\ntext10'
+      '# title10\n\n[![alt10](/path/to/mdast-qrcode-logo_position-right-bottom.png)](url10)\ntext10'
     );
     await toImageDataURL(tree);
     const { mockGenerateQRCode } = require('./lib/generate')._getMocks();

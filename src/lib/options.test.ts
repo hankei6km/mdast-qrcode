@@ -42,7 +42,7 @@ describe('decodeQRCodeOptionsFromFileName()', () => {
       decodeQRCodeOptionsFromFileName(
         {},
         {},
-        'mdast-qrcode-color-dark-111111FF'
+        'mdast-qrcode-color_dark-111111FF'
       )
     ).toEqual([
       {
@@ -54,7 +54,7 @@ describe('decodeQRCodeOptionsFromFileName()', () => {
       decodeQRCodeOptionsFromFileName(
         {},
         {},
-        'mdast-qrcode-color-light-EEEEEEFF'
+        'mdast-qrcode-color_light-EEEEEEFF'
       )
     ).toEqual([
       {
@@ -66,7 +66,7 @@ describe('decodeQRCodeOptionsFromFileName()', () => {
       decodeQRCodeOptionsFromFileName(
         {},
         {},
-        'mdast-qrcode-color-light-EEEEEEFF-logo-position-right-bottom'
+        'mdast-qrcode-color_light-EEEEEEFF-logo_position-right-bottom'
       )
     ).toEqual([
       {
@@ -78,7 +78,7 @@ describe('decodeQRCodeOptionsFromFileName()', () => {
       decodeQRCodeOptionsFromFileName(
         {},
         {},
-        'mdast-qrcode-logo-padding-10-color-light-EEEEEEFF'
+        'mdast-qrcode-logo_padding-10-color_light-EEEEEEFF'
       )
     ).toEqual([
       {

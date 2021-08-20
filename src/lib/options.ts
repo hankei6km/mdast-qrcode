@@ -18,30 +18,31 @@ const optionsDecoderColor = [
 const optionsDecoderLogo = [
   {
     name: 'position',
-    decoder: /.+-logo_position-(center|right-bottom)(-|$)/
+    decoder: /(^|.+-)logo_position-(center|right-bottom)(-|$)/
   },
-  { name: 'fillstyle', decoder: /.+-logo_fillstyle-([0-9A-Fa-f]+)(-|$)/ },
+  { name: 'fillstyle', decoder: /(^|.+-)logo_fillstyle-([0-9A-Fa-f]+)(-|$)/ },
   {
     name: 'fillshape',
-    decoder: /.+-logo_fillshape-(rect|circle)(-|$)/
+    decoder: /(^|.+-)logo_fillshape-(rect|circle)(-|$)/
   },
   {
     name: 'margin',
-    decoder: /.+-logo_margin-(\d+)(-|$)/
+    decoder: /(^|.+-)logo_margin-(\d+)(-|$)/
   },
   {
     name: 'padding',
-    decoder: /.+-logo_padding-(\d+)(-|$)/
+    decoder: /(^|.+-)logo_padding-(\d+)(-|$)/
   },
   {
     name: 'fit',
-    decoder: /.+-logo_fit-(\d+)(-|$)/
+    decoder: /(^|.+-)logo_fit-(\d+)(-|$)/
   }
 ];
 export function decodeQRCodeOptionsFromFileName(
   options: QRCodeToDataURLOptions,
   logoOptions: LogoOptions,
-  fileName: string
+  fileName: string,
+  alt: string
 ): [QRCodeToDataURLOptions, LogoOptions] {
   const retOptions: any = Object.assign(
     {
@@ -62,18 +63,24 @@ export function decodeQRCodeOptionsFromFileName(
       retOptions.color[o.name] = `#${m[1]}`;
     }
   });
-  optionsDecoderLogo.forEach((o) => {
-    const m = fileName.match(o.decoder);
-    if (m) {
-      // TODO: decoder 側で代入用の関数を指定できるように.
-      if (o.name === 'position' || o.name === 'fillshape') {
-        retLogoOptions[o.name] = m[1];
-      } else if (o.name === 'fillstyle') {
-        retLogoOptions[o.name] = `#${m[1]}`;
-      } else {
-        retLogoOptions[o.name] = parseInt(m[1], 10);
+  // logo options は fileName と alt からでコードするので関数化してある.
+  // TODO: ユーティリティ化などを検討.
+  const decodeLogoOptions = (out: any, src: string) => {
+    optionsDecoderLogo.forEach((o) => {
+      const m = src.match(o.decoder);
+      if (m) {
+        // TODO: decoder 側で代入用の関数を指定できるように.
+        if (o.name === 'position' || o.name === 'fillshape') {
+          out[o.name] = m[2];
+        } else if (o.name === 'fillstyle') {
+          out[o.name] = `#${m[2]}`;
+        } else {
+          out[o.name] = parseInt(m[2], 10);
+        }
       }
-    }
-  });
+    });
+  };
+  decodeLogoOptions(retLogoOptions, fileName);
+  decodeLogoOptions(retLogoOptions, alt);
   return [retOptions, retLogoOptions];
 }

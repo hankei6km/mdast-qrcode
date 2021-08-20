@@ -137,4 +137,24 @@ describe('toDataURL()', () => {
       position: 'right-bottom'
     });
   });
+  it('should pass logo options from logo alt(image)', async () => {
+    const tree = fromMarkdown(
+      '# title11\n\n![alt11:qrcode:test11](/path/to/mdast-qrcode.png)\n![logo_position-right-bottom](https://hankei6km.github.io/logo.png)\ntext11'
+    );
+    await toImageDataURL(tree);
+    const { mockGenerateQRCode } = require('./lib/generate')._getMocks();
+    expect(mockGenerateQRCode.mock.calls[0][3]).toEqual({
+      position: 'right-bottom'
+    });
+  });
+  it('should pass options from logo alt(link)', async () => {
+    const tree = fromMarkdown(
+      '# title12\n\n[![alt12](/path/to/mdast-qrcode.png)](url12)\n![logo_position-right-bottom](https://hankei6km.github.io/logo.png)\ntext12'
+    );
+    await toImageDataURL(tree);
+    const { mockGenerateQRCode } = require('./lib/generate')._getMocks();
+    expect(mockGenerateQRCode.mock.calls[0][3]).toEqual({
+      position: 'right-bottom'
+    });
+  });
 });

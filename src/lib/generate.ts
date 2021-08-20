@@ -32,7 +32,9 @@ export async function generateQRCode(
   }
   const logoOptions = Object.assign({}, inLogoOptions);
   const logoPosition =
-    logoOptions.position !== undefined ? logoOptions.position : 'center';
+    logoOptions.position !== undefined
+      ? logoOptions.position
+      : logoOptionsDefaults.position;
   const logoFillstyle =
     logoOptions.fillstyle !== undefined
       ? logoOptions.fillstyle

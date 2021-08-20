@@ -78,33 +78,34 @@ export async function generateQRCode(
     const x =
       logoPosition === 'center'
         ? (qrImg.width - w) / 2
-        : qrImg.width - (w + logoMargin) - logoPadding;
+        : qrImg.width - (w + logoMargin);
     const y =
       logoPosition === 'center'
         ? (qrImg.height - h) / 2
-        : qrImg.height - (h + logoMargin) - logoPadding;
+        : qrImg.height - (h + logoMargin);
     ctx.fillStyle = logoFillstyle;
     if (logoFillshape === 'rect') {
-      ctx.fillRect(
-        x - logoPadding,
-        y - logoPadding,
-        w + logoPadding * 2,
-        h + logoPadding * 2
-      );
+      ctx.fillRect(x, y, w, h);
     } else {
       ctx.beginPath();
       ctx.arc(
-        x - logoPadding + (w + logoPadding * 2) / 2,
-        y - logoPadding + (h + logoPadding * 2) / 2,
+        x + w / 2,
+        y + h / 2,
         // 楕円には対応していない.
-        (w + logoPadding * 2) / 2,
+        w / 2,
         0,
         2 * Math.PI,
         false
       );
       ctx.fill();
     }
-    ctx.drawImage(logoImg, x, y, w, h);
+    ctx.drawImage(
+      logoImg,
+      x + logoPadding,
+      y + logoPadding,
+      w - logoPadding * 2,
+      h - logoPadding * 2
+    );
   }
   return canvas.toDataURL('image/png');
 }

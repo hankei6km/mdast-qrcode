@@ -15,11 +15,13 @@ const QRCodeSourcKindValues = [
 export type QRCodeSourcKind = typeof QRCodeSourcKindValues[number];
 export type LogoOptions = {
   position?: 'center' | 'right-bottom';
+  fillstyle?: string;
   margin?: number;
   fit?: number;
 };
 export const logoOptionsDefaults: Required<LogoOptions> = {
   position: 'center',
+  fillstyle: '#FFFFFFFF',
   margin: 16,
   fit: 30
 };

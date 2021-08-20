@@ -33,6 +33,11 @@ export async function generateQRCode(
   const logoOptions = Object.assign({}, inLogoOptions);
   const logoPosition =
     logoOptions.position !== undefined ? logoOptions.position : 'center';
+  const logoFillstyle =
+    logoOptions.fillstyle !== undefined
+      ? logoOptions.fillstyle
+      : logoOptionsDefaults.fillstyle;
+  const logoPadding = 4;
   const logoMargin =
     logoOptions.margin !== undefined
       ? logoOptions.margin
@@ -64,11 +69,18 @@ export async function generateQRCode(
     const x =
       logoPosition === 'center'
         ? (qrImg.width - w) / 2
-        : qrImg.width - (w + logoMargin);
+        : qrImg.width - (w + logoMargin) - logoPadding;
     const y =
       logoPosition === 'center'
         ? (qrImg.height - h) / 2
-        : qrImg.height - (h + logoMargin);
+        : qrImg.height - (h + logoMargin) - logoPadding;
+    ctx.fillStyle = logoFillstyle;
+    ctx.fillRect(
+      x - logoPadding,
+      y - logoPadding,
+      w + logoPadding * 2,
+      h + logoPadding * 2
+    );
     ctx.drawImage(logoImg, x, y, w, h);
   }
   return canvas.toDataURL('image/png');

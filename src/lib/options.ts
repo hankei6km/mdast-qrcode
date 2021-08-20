@@ -20,6 +20,7 @@ const optionsDecoderLogo = [
     name: 'position',
     decoder: /.+-logo_position-(center|right-bottom)(-|$)/
   },
+  { name: 'fillstyle', decoder: /.+-logo_fillstyle-([0-9A-Fa-f]+)(-|$)/ },
   {
     name: 'margin',
     decoder: /.+-logo_margin-(\d+)(-|$)/
@@ -59,6 +60,8 @@ export function decodeQRCodeOptionsFromFileName(
       // TODO: decoder 側で型を指定できるように.
       if (o.name === 'position') {
         retLogoOptions[o.name] = m[1];
+      } else if (o.name === 'fillstyle') {
+        retLogoOptions[o.name] = `#${m[1]}`;
       } else {
         retLogoOptions[o.name] = parseInt(m[1], 10);
       }

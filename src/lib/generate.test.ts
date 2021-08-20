@@ -4,14 +4,19 @@ const consoleErrror = console.error;
 
 jest.mock('canvas', () => {
   const mockDrawImage = jest.fn();
+  const mockFillRect = jest.fn();
   const mockGetContext = jest.fn();
   const mockToDataURL = jest.fn();
   const mockCreateCanvas = jest.fn();
   const mockLoadImage = jest.fn();
   const reset = () => {
     mockDrawImage.mockReset();
+    mockFillRect.mockReset();
     mockGetContext.mockReset();
-    mockGetContext.mockReturnValue({ drawImage: mockDrawImage });
+    mockGetContext.mockReturnValue({
+      drawImage: mockDrawImage,
+      fillRect: mockFillRect
+    });
     mockToDataURL.mockReset();
     mockToDataURL.mockReturnValue('check');
     mockCreateCanvas.mockReset();
@@ -37,6 +42,7 @@ jest.mock('canvas', () => {
     _reset: reset,
     _getMocks: () => ({
       mockDrawImage,
+      mockFillRect,
       mockGetContext,
       mockToDataURL,
       mockCreateCanvas,
@@ -74,6 +80,7 @@ describe('generateQRCode()', () => {
     const {
       mockLoadImage,
       mockCreateCanvas,
+      mockFillRect,
       mockDrawImage
     } = require('canvas')._getMocks();
     const { mockToDataURL } = require('qrcode')._getMocks();
@@ -92,6 +99,7 @@ describe('generateQRCode()', () => {
       }
     ]);
     expect(mockCreateCanvas.mock.calls[0]).toEqual([100, 100]);
+    expect(mockFillRect.mock.calls.length).toEqual(0);
     expect(mockDrawImage.mock.calls.length).toEqual(1);
     expect(mockDrawImage.mock.calls[0]).toEqual([
       { width: 100, height: 100 },
@@ -107,6 +115,7 @@ describe('generateQRCode()', () => {
     const {
       mockLoadImage,
       mockCreateCanvas,
+      mockFillRect,
       mockDrawImage
     } = require('canvas')._getMocks();
     const { mockToDataURL } = require('qrcode')._getMocks();
@@ -126,6 +135,8 @@ describe('generateQRCode()', () => {
       }
     ]);
     expect(mockCreateCanvas.mock.calls[0]).toEqual([200, 200]);
+    expect(mockFillRect.mock.calls.length).toEqual(1);
+    expect(mockFillRect.mock.calls[0]).toEqual([66, 66, 68, 68]);
     expect(mockDrawImage.mock.calls.length).toEqual(2);
     expect(mockDrawImage.mock.calls[0]).toEqual([
       { width: 200, height: 200 },
@@ -150,7 +161,8 @@ describe('generateQRCode()', () => {
       { position: 'right-bottom' }
     );
     expect(await res).toEqual('check');
-    const { mockDrawImage } = require('canvas')._getMocks();
+    const { mockFillRect, mockDrawImage } = require('canvas')._getMocks();
+    expect(mockFillRect.mock.calls[0]).toEqual([116, 116, 68, 68]);
     expect(mockDrawImage.mock.calls[0]).toEqual([
       { width: 200, height: 200 },
       0,
@@ -160,8 +172,8 @@ describe('generateQRCode()', () => {
     ]);
     expect(mockDrawImage.mock.calls[1]).toEqual([
       { width: 100, height: 100 },
-      124,
-      124,
+      120,
+      120,
       60,
       60
     ]);

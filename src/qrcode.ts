@@ -25,9 +25,9 @@ export const logoOptionsDefaults: Required<LogoOptions> = {
   position: 'center',
   fillshape: 'rect',
   fillstyle: '#FFFFFFFF',
-  margin: 16,
+  margin: 60,
   padding: 4,
-  fit: 30
+  fit: 20
 };
 
 export async function byImageScheme(

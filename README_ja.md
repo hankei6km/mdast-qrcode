@@ -91,7 +91,7 @@ yield:
 text5
 ```
 
-### ファイル名から options を渡す
+### 画像の連続記述でロゴを重ねる
 
 code:
 
@@ -102,7 +102,7 @@ import { toImageDataURL } from './qrcode';
 
 (async () => {
   const tree = fromMarkdown(
-    '# title6\n\n![alt6:qrcode:test6](/path/to/mdast-qrcode-margin-1-width-250.png)\ntext6'
+    '# title6\n\n[![alt6](/path/to/mdast-qrcode.png)](url6)\n![](https://hankei6km.github.io/logo.png)\ntext6'
   );
   await toImageDataURL(tree);
   console.log(toMarkdown(tree));
@@ -118,16 +118,7 @@ yield:
 text6
 ```
 
-options:
-
-- margin: `-margin-<number>`
-- scale: `-scale-<number>`
-- width: `-width-<number>`
-- colorr.light: `-color-light-<#RRGGBBAA>` 
-- color.dark: `-color-light-<#RRGGBBAA>` 
-
-
-### 画像の連続記述でロゴを重ねる
+### ファイル名/ロゴの alt から options を渡す
 
 code:
 
@@ -138,7 +129,7 @@ import { toImageDataURL } from './qrcode';
 
 (async () => {
   const tree = fromMarkdown(
-    '# title7\n\n[![alt7](/path/to/mdast-qrcode.png)](url7)\n![](https://hankei6km.github.io/logo.png)\ntext7'
+    '# title7\n\n![alt7:qrcode:test7](/path/to/mdast-qrcode-width-250.png)\n\n![logo_fillstyle-FF0000FF](https://hankei6km.github.io/logo.png)text7'
   );
   await toImageDataURL(tree);
   console.log(toMarkdown(tree));
@@ -148,15 +139,33 @@ import { toImageDataURL } from './qrcode';
 yield:
 
 ```markdown
-# title6
+# title7
 
 [![alt7](data:image/png;base64,iVBORw0KGgoAAAAN ...snip ...=)](url7)
-text7
+text6
 ```
+
+qrcode options:
+
+- margin: `-margin-<number>`
+- scale: `-scale-<number>`
+- width: `-width-<number>`
+- colorr.light: `-color_light-<RRGGBBAA>` 
+- color.dark: `-color_light-<RRGGBBAA>` 
+
+logo options:
+
+- position: `-logo_position-<center | right-bottom>`
+- fillstyle: `-logo_fillstyle-<<RRGGBBAA>>`
+- fillshape: `-logo_fillshape-<circle | rect>>`
+- margin: `-logo_margin-<number>`
+- paddinfg: `-logo_padding-<number>`
+- fit: `-logo_fit-<number>`
+
 
 ## API
 
-### `toImageDataURL(tree[, options])`
+### `toImageDataURL(tree[, options, logoOptions])`
 
 [mdast](https://github.com/syntax-tree/mdast) の画像に含まれる "qrcode:" を変換。
 画像は `root / paragraph / image` または `root / paragraph / link / image`  階層のみサポートしている。
@@ -166,7 +175,50 @@ QRCode の直後に `image` がある場合、その `image` はロゴ画像と�
 
 #### options
 
-options は [QRCode,toDataURL](https://www.npmjs.com/package/qrcode#todataurltext-options-cberror-url-1) へ渡される。
+options は [QRCode.toDataURL](https://www.npmjs.com/package/qrcode#todataurltext-options-cberror-url-1) へ渡される。
+
+#### logoOptions
+
+logo を重ねるときのオプション。
+
+##### `position`
+
+ `center` | `right-bottom`  
+
+deault: `center`
+
+##### `fillstyle`
+
+ `#RRGGBBAA`
+
+deault: `#FFFFFFFF`
+
+##### `fillshape`
+
+ `circle` | `rect`
+
+deault: `circle`
+
+##### `margin`
+
+ `<number>`
+
+default: `72`
+
+##### `padding`
+
+ `<number>`
+
+default: `4`
+
+##### `fit`
+
+`<number>`
+
+QRCode の幅に対する比率(単位は `%`)。 `0` を渡すと無効化。
+
+default: `35`
+
 
 #### returns
 
@@ -202,3 +254,4 @@ $ cat example/qrcode-deck.md  | md-qr > qrcode-embedded-deck.md
 MIT License
 
 Copyright (c) 2021 hankei6km
+

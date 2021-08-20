@@ -90,7 +90,8 @@ yield:
 [![alt5](data:image/png;base64,iVBORw0KGgoAAAAN ...snip ...=)](url5)
 text5
 ```
-### Pass options from file name
+
+### Overlay logo image by writing logo image after qrcode image
 
 code:
 
@@ -101,7 +102,7 @@ import { toImageDataURL } from './qrcode';
 
 (async () => {
   const tree = fromMarkdown(
-    '# title6\n\n![alt6:qrcode:test6](/path/to/mdast-qrcode-margin-1-width-250.png)\ntext6'
+    '# title6\n\n[![alt6](/path/to/mdast-qrcode.png)](url6)\n![](https://hankei6km.github.io/logo.png)\ntext6'
   );
   await toImageDataURL(tree);
   console.log(toMarkdown(tree));
@@ -117,15 +118,7 @@ yield:
 text6
 ```
 
-options:
-
-- margin: `-margin-<number>`
-- scale: `-scale-<number>`
-- width: `-width-<number>`
-- colorr.light: `-color-light-<#RRGGBBAA>` 
-- color.dark: `-color-light-<#RRGGBBAA>` 
-
-### Overlay logo image by writing logo image after qrcode image
+### Pass options from file name / logo alt
 
 code:
 
@@ -136,7 +129,7 @@ import { toImageDataURL } from './qrcode';
 
 (async () => {
   const tree = fromMarkdown(
-    '# title7\n\n[![alt7](/path/to/mdast-qrcode.png)](url7)\n![](https://hankei6km.github.io/logo.png)\ntext7'
+    '# title7\n\n![alt7:qrcode:test7](/path/to/mdast-qrcode-width-250.png)\n\n![logo_fillstyle-FF0000FF](https://hankei6km.github.io/logo.png)text7'
   );
   await toImageDataURL(tree);
   console.log(toMarkdown(tree));
@@ -146,15 +139,33 @@ import { toImageDataURL } from './qrcode';
 yield:
 
 ```markdown
-# title6
+# title7
 
 [![alt7](data:image/png;base64,iVBORw0KGgoAAAAN ...snip ...=)](url7)
-text7
+text6
 ```
+
+qrcode options:
+
+- margin: `-margin-<number>`
+- scale: `-scale-<number>`
+- width: `-width-<number>`
+- colorr.light: `-color_light-<RRGGBBAA>` 
+- color.dark: `-color_light-<RRGGBBAA>` 
+
+logo options:
+
+- position: `-logo_position-<center | right-bottom>`
+- fillstyle: `-logo_fillstyle-<<RRGGBBAA>>`
+- fillshape: `-logo_fillshape-<circle | rect>>`
+- margin: `-logo_margin-<number>`
+- paddinfg: `-logo_padding-<number>`
+- fit: `-logo_fit-<number>`
+
 
 ## API
 
-### `toImageDataURL(tree[, options])`
+### `toImageDataURL(tree[, options, logoOptions])`
 
 convert "qrcode:" to dataURL in Image URL of [mdast](https://github.com/syntax-tree/mdast).
 Images only support `root / paragraph / image` or `root / paragraph / link / image`  hierarchy.
@@ -163,7 +174,50 @@ If `image` is exist after the QRCode, that` image` will be converted as logo ima
 
 #### options 
 
-Options are passed to [QRCode,toDataURL](https://www.npmjs.com/package/qrcode#todataurltext-options-cberror-url-1).
+Options are passed to [QRCode.toDataURL](https://www.npmjs.com/package/qrcode#todataurltext-options-cberror-url-1).
+
+#### logoOptions
+
+Options to overlay a logo image.
+
+##### `position`
+
+ `center` | `right-bottom`  
+
+deault: `center`
+
+##### `fillstyle`
+
+ `#RRGGBBAA`
+
+deault: `#FFFFFFFF`
+
+##### `fillshape`
+
+ `circle` | `rect`
+
+deault: `circle`
+
+##### `margin`
+
+ `<number>`
+
+default: `72`
+
+##### `padding`
+
+ `<number>`
+
+default: `4`
+
+##### `fit`
+
+`<number>`
+
+The ratio to QR Code width(unit is `%`). It disabled by passing `0`.
+
+default: `35` 
+
 
 #### returns
 

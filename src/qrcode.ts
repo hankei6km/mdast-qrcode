@@ -23,7 +23,7 @@ export type LogoOptions = {
 };
 export const logoOptionsDefaults: Required<LogoOptions> = {
   position: 'center',
-  fillshape: 'rect',
+  fillshape: 'circle',
   fillstyle: '#FFFFFFFF',
   margin: 72,
   padding: 4,

@@ -125,6 +125,9 @@ describe('generateQRCode()', () => {
     const res = generateQRCode('test data1', 'logo');
     expect(await res).toEqual('check');
     const {
+      mockBeginPath,
+      mockArc,
+      mockClip,
       mockLoadImage,
       mockCreateCanvas,
       mockFillRect,
@@ -148,15 +151,34 @@ describe('generateQRCode()', () => {
       }
     ]);
     expect(mockCreateCanvas.mock.calls[0]).toEqual([200, 200]);
+    expect(mockBeginPath.mock.calls.length).toEqual(2);
     expect(mockFillRect.mock.calls.length).toEqual(1);
     expect(mockFillRect.mock.calls[0]).toEqual([65, 65, 70, 70]);
     expect(mockDrawImage.mock.calls.length).toEqual(2);
+    expect(mockClip.mock.calls.length).toEqual(2);
+    expect(mockArc.mock.calls.length).toEqual(2);
     expect(mockDrawImage.mock.calls[0]).toEqual([
       { width: 200, height: 200 },
       0,
       0,
       200,
       200
+    ]);
+    expect(mockArc.mock.calls[0]).toEqual([
+      100,
+      100,
+      35,
+      0,
+      2 * Math.PI,
+      false
+    ]);
+    expect(mockArc.mock.calls[1]).toEqual([
+      100,
+      100,
+      31,
+      0,
+      2 * Math.PI,
+      false
     ]);
     expect(mockDrawImage.mock.calls[1]).toEqual([
       { width: 100, height: 100 },
@@ -174,7 +196,11 @@ describe('generateQRCode()', () => {
       { position: 'right-bottom' }
     );
     expect(await res).toEqual('check');
-    const { mockFillRect, mockDrawImage } = require('canvas')._getMocks();
+    const {
+      mockArc,
+      mockFillRect,
+      mockDrawImage
+    } = require('canvas')._getMocks();
     expect(mockFillRect.mock.calls[0]).toEqual([58, 58, 70, 70]);
     expect(mockDrawImage.mock.calls[0]).toEqual([
       { width: 200, height: 200 },
@@ -183,6 +209,15 @@ describe('generateQRCode()', () => {
       200,
       200
     ]);
+    expect(mockDrawImage.mock.calls[0]).toEqual([
+      { width: 200, height: 200 },
+      0,
+      0,
+      200,
+      200
+    ]);
+    expect(mockArc.mock.calls[0]).toEqual([93, 93, 35, 0, 2 * Math.PI, false]);
+    expect(mockArc.mock.calls[1]).toEqual([93, 93, 31, 0, 2 * Math.PI, false]);
     expect(mockDrawImage.mock.calls[1]).toEqual([
       { width: 100, height: 100 },
       62,
@@ -263,8 +298,20 @@ describe('generateQRCode()', () => {
   it('should generate QRCode with logo(padding)', async () => {
     const res = generateQRCode('test data1', 'logo', {}, { padding: 10 });
     expect(await res).toEqual('check');
-    const { mockFillRect, mockDrawImage } = require('canvas')._getMocks();
+    const {
+      mockArc,
+      mockFillRect,
+      mockDrawImage
+    } = require('canvas')._getMocks();
     expect(mockFillRect.mock.calls[0]).toEqual([65, 65, 70, 70]);
+    expect(mockArc.mock.calls[1]).toEqual([
+      100,
+      100,
+      25,
+      0,
+      2 * Math.PI,
+      false
+    ]);
     expect(mockDrawImage.mock.calls[1]).toEqual([
       { width: 100, height: 100 },
       75,
@@ -274,12 +321,7 @@ describe('generateQRCode()', () => {
     ]);
   });
   it('should generate QRCode with logo(circle)', async () => {
-    const res = generateQRCode(
-      'test data1',
-      'logo',
-      {},
-      { fillshape: 'circle' }
-    );
+    const res = generateQRCode('test data1', 'logo', {}, { fillshape: 'rect' });
     expect(await res).toEqual('check');
     const {
       mockBeginPath,
@@ -289,27 +331,11 @@ describe('generateQRCode()', () => {
       mockDrawImage
     } = require('canvas')._getMocks();
     expect(mockFillRect.mock.calls.length).toEqual(1);
-    expect(mockBeginPath.mock.calls.length).toEqual(2);
+    expect(mockBeginPath.mock.calls.length).toEqual(0);
     expect(mockFillRect.mock.calls.length).toEqual(1);
     expect(mockFillRect.mock.calls[0]).toEqual([65, 65, 70, 70]);
-    expect(mockArc.mock.calls.length).toEqual(2);
-    expect(mockClip.mock.calls.length).toEqual(2);
-    expect(mockArc.mock.calls[0]).toEqual([
-      100,
-      100,
-      35,
-      0,
-      2 * Math.PI,
-      false
-    ]);
-    expect(mockArc.mock.calls[1]).toEqual([
-      100,
-      100,
-      31,
-      0,
-      2 * Math.PI,
-      false
-    ]);
+    expect(mockArc.mock.calls.length).toEqual(0);
+    expect(mockClip.mock.calls.length).toEqual(0);
     expect(mockDrawImage.mock.calls[1]).toEqual([
       { width: 100, height: 100 },
       69,

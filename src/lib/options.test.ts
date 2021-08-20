@@ -119,6 +119,16 @@ describe('decodeQRCodeOptionsFromFileName()', () => {
         ''
       )
     ).toEqual([{ color: {} }, { padding: 20 }]);
+  });
+  it('should decode from logo alt', () => {
+    expect(
+      decodeQRCodeOptionsFromFileName(
+        {},
+        {},
+        'mdast-qrcode',
+        'width-400-color_dark-00FF00FF'
+      )
+    ).toEqual([{ width: 400, color: { dark: '#00FF00FF' } }, {}]);
     expect(
       decodeQRCodeOptionsFromFileName(
         {},
@@ -131,9 +141,25 @@ describe('decodeQRCodeOptionsFromFileName()', () => {
       decodeQRCodeOptionsFromFileName(
         {},
         {},
-        'mdast-qrcode-logo_padding-20',
-        'logo_padding-22'
+        'mdast-qrcode',
+        'width-400-color_dark-00FF00FF-logo_padding-21-logo_fit-10'
       )
-    ).toEqual([{ color: {} }, { padding: 22 }]);
+    ).toEqual([
+      { width: 400, color: { dark: '#00FF00FF' } },
+      { padding: 21, fit: 10 }
+    ]);
+  });
+  it('should decode from logo alt(overwrite from file name)', () => {
+    expect(
+      decodeQRCodeOptionsFromFileName(
+        {},
+        {},
+        'mdast-qrcode-width-400-color_dark-00FF00FF-logo_padding-20-logo_fit-10',
+        'width-401-color_dark-00FFFFFF-logo_padding-21-logo_fit-11'
+      )
+    ).toEqual([
+      { width: 401, color: { dark: '#00FFFFFF' } },
+      { padding: 21, fit: 11 }
+    ]);
   });
 });

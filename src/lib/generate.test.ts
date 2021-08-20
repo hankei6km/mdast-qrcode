@@ -6,7 +6,7 @@ jest.mock('canvas', () => {
   const mockDrawImage = jest.fn();
   const mockBeginPath = jest.fn();
   const mockArc = jest.fn();
-  const mockFill = jest.fn();
+  const mockClip = jest.fn();
   const mockFillRect = jest.fn();
   const mockGetContext = jest.fn();
   const mockToDataURL = jest.fn();
@@ -19,7 +19,7 @@ jest.mock('canvas', () => {
     mockGetContext.mockReturnValue({
       beginPath: mockBeginPath,
       arc: mockArc,
-      fill: mockFill,
+      clip: mockClip,
       drawImage: mockDrawImage,
       fillRect: mockFillRect
     });
@@ -49,7 +49,7 @@ jest.mock('canvas', () => {
     _getMocks: () => ({
       mockBeginPath,
       mockArc,
-      mockFill,
+      mockClip,
       mockDrawImage,
       mockFillRect,
       mockGetContext,
@@ -281,18 +281,28 @@ describe('generateQRCode()', () => {
     const {
       mockBeginPath,
       mockArc,
-      mockFill,
+      mockClip,
       mockFillRect,
       mockDrawImage
     } = require('canvas')._getMocks();
-    expect(mockFillRect.mock.calls.length).toEqual(0);
-    expect(mockBeginPath.mock.calls.length).toEqual(1);
-    expect(mockArc.mock.calls.length).toEqual(1);
-    expect(mockFill.mock.calls.length).toEqual(1);
+    expect(mockFillRect.mock.calls.length).toEqual(1);
+    expect(mockBeginPath.mock.calls.length).toEqual(2);
+    expect(mockFillRect.mock.calls.length).toEqual(1);
+    expect(mockFillRect.mock.calls[0]).toEqual([65, 65, 70, 70]);
+    expect(mockArc.mock.calls.length).toEqual(2);
+    expect(mockClip.mock.calls.length).toEqual(2);
     expect(mockArc.mock.calls[0]).toEqual([
       100,
       100,
       35,
+      0,
+      2 * Math.PI,
+      false
+    ]);
+    expect(mockArc.mock.calls[1]).toEqual([
+      100,
+      100,
+      31,
       0,
       2 * Math.PI,
       false

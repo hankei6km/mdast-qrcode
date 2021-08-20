@@ -85,9 +85,7 @@ export async function generateQRCode(
         ? (qrImg.height - h) / 2
         : qrImg.height - (h + logoMargin);
     ctx.fillStyle = logoFillstyle;
-    if (logoFillshape === 'rect') {
-      ctx.fillRect(x, y, w, h);
-    } else {
+    if (logoFillshape === 'circle') {
       ctx.beginPath();
       ctx.arc(
         x + w / 2,
@@ -98,7 +96,21 @@ export async function generateQRCode(
         2 * Math.PI,
         false
       );
-      ctx.fill();
+      ctx.clip();
+    }
+    ctx.fillRect(x, y, w, h);
+    if (logoFillshape === 'circle') {
+      ctx.beginPath();
+      ctx.arc(
+        x + w / 2,
+        y + h / 2,
+        // 楕円には対応していない.
+        w / 2 - logoPadding,
+        0,
+        2 * Math.PI,
+        false
+      );
+      ctx.clip();
     }
     ctx.drawImage(
       logoImg,

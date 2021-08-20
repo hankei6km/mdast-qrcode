@@ -29,6 +29,7 @@ export async function generateQRCode(
   const options = Object.assign({}, inOptions);
   if (logoImg) {
     options.errorCorrectionLevel = 'H';
+    options.width = options.width !== undefined ? options.width : 200;
   }
   const logoOptions = Object.assign({}, inLogoOptions);
   const logoPosition =

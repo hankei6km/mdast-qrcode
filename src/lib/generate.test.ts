@@ -135,6 +135,7 @@ describe('generateQRCode()', () => {
       'test data1',
       {
         errorCorrectionLevel: 'H',
+        width: 200,
         margin: 4,
         scale: 4,
         color: {

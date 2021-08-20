@@ -22,6 +22,10 @@ const optionsDecoderLogo = [
   },
   { name: 'fillstyle', decoder: /.+-logo_fillstyle-([0-9A-Fa-f]+)(-|$)/ },
   {
+    name: 'fillshape',
+    decoder: /.+-logo_fillshape-(rect|circle)(-|$)/
+  },
+  {
     name: 'margin',
     decoder: /.+-logo_margin-(\d+)(-|$)/
   },
@@ -61,8 +65,8 @@ export function decodeQRCodeOptionsFromFileName(
   optionsDecoderLogo.forEach((o) => {
     const m = fileName.match(o.decoder);
     if (m) {
-      // TODO: decoder 側で型を指定できるように.
-      if (o.name === 'position') {
+      // TODO: decoder 側で代入用の関数を指定できるように.
+      if (o.name === 'position' || o.name === 'fillshape') {
         retLogoOptions[o.name] = m[1];
       } else if (o.name === 'fillstyle') {
         retLogoOptions[o.name] = `#${m[1]}`;

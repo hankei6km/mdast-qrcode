@@ -4,6 +4,9 @@ const consoleErrror = console.error;
 
 jest.mock('canvas', () => {
   const mockDrawImage = jest.fn();
+  const mockBeginPath = jest.fn();
+  const mockArc = jest.fn();
+  const mockFill = jest.fn();
   const mockFillRect = jest.fn();
   const mockGetContext = jest.fn();
   const mockToDataURL = jest.fn();
@@ -14,6 +17,9 @@ jest.mock('canvas', () => {
     mockFillRect.mockReset();
     mockGetContext.mockReset();
     mockGetContext.mockReturnValue({
+      beginPath: mockBeginPath,
+      arc: mockArc,
+      fill: mockFill,
       drawImage: mockDrawImage,
       fillRect: mockFillRect
     });
@@ -41,6 +47,9 @@ jest.mock('canvas', () => {
     loadImage: mockLoadImage,
     _reset: reset,
     _getMocks: () => ({
+      mockBeginPath,
+      mockArc,
+      mockFill,
       mockDrawImage,
       mockFillRect,
       mockGetContext,
@@ -252,6 +261,41 @@ describe('generateQRCode()', () => {
     expect(await res).toEqual('check');
     const { mockFillRect, mockDrawImage } = require('canvas')._getMocks();
     expect(mockFillRect.mock.calls[0]).toEqual([30, 30, 140, 140]);
+    expect(mockDrawImage.mock.calls[1]).toEqual([
+      { width: 100, height: 100 },
+      70,
+      70,
+      60,
+      60
+    ]);
+  });
+  it('should generate QRCode with logo(circle)', async () => {
+    const res = generateQRCode(
+      'test data1',
+      'logo',
+      {},
+      { fillshape: 'circle' }
+    );
+    expect(await res).toEqual('check');
+    const {
+      mockBeginPath,
+      mockArc,
+      mockFill,
+      mockFillRect,
+      mockDrawImage
+    } = require('canvas')._getMocks();
+    expect(mockFillRect.mock.calls.length).toEqual(0);
+    expect(mockBeginPath.mock.calls.length).toEqual(1);
+    expect(mockArc.mock.calls.length).toEqual(1);
+    expect(mockFill.mock.calls.length).toEqual(1);
+    expect(mockArc.mock.calls[0]).toEqual([
+      100,
+      100,
+      34,
+      0,
+      2 * Math.PI,
+      false
+    ]);
     expect(mockDrawImage.mock.calls[1]).toEqual([
       { width: 100, height: 100 },
       70,

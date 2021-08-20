@@ -37,6 +37,10 @@ export async function generateQRCode(
     logoOptions.fillstyle !== undefined
       ? logoOptions.fillstyle
       : logoOptionsDefaults.fillstyle;
+  const logoFillshape =
+    logoOptions.fillshape !== undefined
+      ? logoOptions.fillshape
+      : logoOptionsDefaults.fillshape;
   const logoPadding =
     logoOptions.padding !== undefined
       ? logoOptions.padding
@@ -78,12 +82,26 @@ export async function generateQRCode(
         ? (qrImg.height - h) / 2
         : qrImg.height - (h + logoMargin) - logoPadding;
     ctx.fillStyle = logoFillstyle;
-    ctx.fillRect(
-      x - logoPadding,
-      y - logoPadding,
-      w + logoPadding * 2,
-      h + logoPadding * 2
-    );
+    if (logoFillshape === 'rect') {
+      ctx.fillRect(
+        x - logoPadding,
+        y - logoPadding,
+        w + logoPadding * 2,
+        h + logoPadding * 2
+      );
+    } else {
+      ctx.beginPath();
+      ctx.arc(
+        x - logoPadding + (w + logoPadding * 2) / 2,
+        y - logoPadding + (h + logoPadding * 2) / 2,
+        // 楕円には対応していない.
+        (w + logoPadding * 2) / 2,
+        0,
+        2 * Math.PI,
+        false
+      );
+      ctx.fill();
+    }
     ctx.drawImage(logoImg, x, y, w, h);
   }
   return canvas.toDataURL('image/png');

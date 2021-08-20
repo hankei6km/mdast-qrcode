@@ -25,9 +25,9 @@ export const logoOptionsDefaults: Required<LogoOptions> = {
   position: 'center',
   fillshape: 'rect',
   fillstyle: '#FFFFFFFF',
-  margin: 60,
+  margin: 72,
   padding: 4,
-  fit: 20
+  fit: 35 // 面積で計算していないので注意
 };
 
 export async function byImageScheme(

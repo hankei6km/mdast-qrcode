@@ -247,6 +247,19 @@ describe('generateQRCode()', () => {
       100
     ]);
   });
+  it('should generate QRCode with logo(padding)', async () => {
+    const res = generateQRCode('test data1', 'logo', {}, { padding: 40 });
+    expect(await res).toEqual('check');
+    const { mockFillRect, mockDrawImage } = require('canvas')._getMocks();
+    expect(mockFillRect.mock.calls[0]).toEqual([30, 30, 140, 140]);
+    expect(mockDrawImage.mock.calls[1]).toEqual([
+      { width: 100, height: 100 },
+      70,
+      70,
+      60,
+      60
+    ]);
+  });
   it('should skip logo image at loadImage failed', async () => {
     const mockConsoleError = jest.fn();
     console.error = mockConsoleError;

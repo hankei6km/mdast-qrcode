@@ -37,7 +37,10 @@ export async function generateQRCode(
     logoOptions.fillstyle !== undefined
       ? logoOptions.fillstyle
       : logoOptionsDefaults.fillstyle;
-  const logoPadding = 4;
+  const logoPadding =
+    logoOptions.padding !== undefined
+      ? logoOptions.padding
+      : logoOptionsDefaults.padding;
   const logoMargin =
     logoOptions.margin !== undefined
       ? logoOptions.margin

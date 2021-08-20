@@ -17,12 +17,14 @@ export type LogoOptions = {
   position?: 'center' | 'right-bottom';
   fillstyle?: string;
   margin?: number;
+  padding?: number;
   fit?: number;
 };
 export const logoOptionsDefaults: Required<LogoOptions> = {
   position: 'center',
   fillstyle: '#FFFFFFFF',
   margin: 16,
+  padding: 4,
   fit: 30
 };
 

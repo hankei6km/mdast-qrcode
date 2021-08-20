@@ -93,5 +93,8 @@ describe('decodeQRCodeOptionsFromFileName()', () => {
         'mdast-qrcode-logo_fillstyle-FF0000FF'
       )
     ).toEqual([{ color: {} }, { fillstyle: '#FF0000FF' }]);
+    expect(
+      decodeQRCodeOptionsFromFileName({}, {}, 'mdast-qrcode-logo_padding-20')
+    ).toEqual([{ color: {} }, { padding: 20 }]);
   });
 });

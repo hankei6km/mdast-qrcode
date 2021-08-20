@@ -14,6 +14,9 @@ jest.mock('canvas', () => {
   const mockLoadImage = jest.fn();
   const reset = () => {
     mockDrawImage.mockReset();
+    mockBeginPath.mockReset();
+    mockArc.mockReset();
+    mockClip.mockReset();
     mockFillRect.mockReset();
     mockGetContext.mockReset();
     mockGetContext.mockReturnValue({

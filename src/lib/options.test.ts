@@ -1,27 +1,21 @@
-import { decodeQRCodeOptionsFromFileName } from './options';
-describe('decodeQRCodeOptionsFromFileName()', () => {
+import { decodeOptions } from './options';
+describe('decodeOptions()', () => {
   it('should decode from file name', () => {
-    expect(
-      decodeQRCodeOptionsFromFileName({}, {}, ['mdast-qrcode-margin-4', ''])
-    ).toEqual([
+    expect(decodeOptions({}, {}, ['mdast-qrcode-margin-4', ''])).toEqual([
       {
         margin: 4,
         color: {}
       },
       {}
     ]);
-    expect(
-      decodeQRCodeOptionsFromFileName({}, {}, ['mdast-qrcode-scale-4', ''])
-    ).toEqual([
+    expect(decodeOptions({}, {}, ['mdast-qrcode-scale-4', ''])).toEqual([
       {
         scale: 4,
         color: {}
       },
       {}
     ]);
-    expect(
-      decodeQRCodeOptionsFromFileName({}, {}, ['mdast-qrcode-width-200', ''])
-    ).toEqual([
+    expect(decodeOptions({}, {}, ['mdast-qrcode-width-200', ''])).toEqual([
       {
         width: 200,
         color: {}
@@ -29,10 +23,7 @@ describe('decodeQRCodeOptionsFromFileName()', () => {
       {}
     ]);
     expect(
-      decodeQRCodeOptionsFromFileName({}, {}, [
-        'mdast-qrcode-scale-4-width-200',
-        ''
-      ])
+      decodeOptions({}, {}, ['mdast-qrcode-scale-4-width-200', ''])
     ).toEqual([
       {
         scale: 4,
@@ -42,10 +33,7 @@ describe('decodeQRCodeOptionsFromFileName()', () => {
       {}
     ]);
     expect(
-      decodeQRCodeOptionsFromFileName({}, {}, [
-        'mdast-qrcode-color_dark-111111FF',
-        ''
-      ])
+      decodeOptions({}, {}, ['mdast-qrcode-color_dark-111111FF', ''])
     ).toEqual([
       {
         color: { dark: '#111111FF' }
@@ -53,10 +41,7 @@ describe('decodeQRCodeOptionsFromFileName()', () => {
       {}
     ]);
     expect(
-      decodeQRCodeOptionsFromFileName({}, {}, [
-        'mdast-qrcode-color_light-EEEEEEFF',
-        ''
-      ])
+      decodeOptions({}, {}, ['mdast-qrcode-color_light-EEEEEEFF', ''])
     ).toEqual([
       {
         color: { light: '#EEEEEEFF' }
@@ -64,7 +49,7 @@ describe('decodeQRCodeOptionsFromFileName()', () => {
       {}
     ]);
     expect(
-      decodeQRCodeOptionsFromFileName({}, {}, [
+      decodeOptions({}, {}, [
         'mdast-qrcode-color_light-EEEEEEFF-logo_position-right-bottom',
         ''
       ])
@@ -75,7 +60,7 @@ describe('decodeQRCodeOptionsFromFileName()', () => {
       { position: 'right-bottom' }
     ]);
     expect(
-      decodeQRCodeOptionsFromFileName({}, {}, [
+      decodeOptions({}, {}, [
         'mdast-qrcode-logo_margin-10-color_light-EEEEEEFF',
         ''
       ])
@@ -86,28 +71,18 @@ describe('decodeQRCodeOptionsFromFileName()', () => {
       { margin: 10 }
     ]);
     expect(
-      decodeQRCodeOptionsFromFileName({}, {}, [
-        'mdast-qrcode-logo_fillstyle-FF0000FF',
-        ''
-      ])
+      decodeOptions({}, {}, ['mdast-qrcode-logo_fillstyle-FF0000FF', ''])
     ).toEqual([{ color: {} }, { fillstyle: '#FF0000FF' }]);
     expect(
-      decodeQRCodeOptionsFromFileName({}, {}, [
-        'mdast-qrcode-logo_fillshape-circle',
-        ''
-      ])
+      decodeOptions({}, {}, ['mdast-qrcode-logo_fillshape-circle', ''])
     ).toEqual([{ color: {} }, { fillshape: 'circle' }]);
     expect(
-      decodeQRCodeOptionsFromFileName({}, {}, [
-        'mdast-qrcode-logo_padding-20',
-
-        ''
-      ])
+      decodeOptions({}, {}, ['mdast-qrcode-logo_padding-20', ''])
     ).toEqual([{ color: {} }, { padding: 20 }]);
   });
   it('should decode from multiple sources', () => {
     expect(
-      decodeQRCodeOptionsFromFileName({}, {}, [
+      decodeOptions({}, {}, [
         'mdast-qrcode-width-400-color_dark-00FF00FF-logo_padding-20-logo_fit-10',
         'width-401-color_dark-00FFFFFF-logo_padding-21-logo_fit-11'
       ])

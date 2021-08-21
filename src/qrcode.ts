@@ -2,7 +2,7 @@ import * as path from 'path';
 import { Root, Content, Image, Link } from 'mdast';
 import QRCode from 'qrcode';
 import { generateQRCode } from './lib/generate';
-import { decodeQRCodeOptionsFromFileName } from './lib/options';
+import { decodeOptions } from './lib/options';
 import { selectTarget } from './lib/select';
 
 const qrcodeInAlt = /(^|(^.*):)qrcode:(.+)$/;
@@ -61,10 +61,7 @@ export async function byImageDummy(
     const d = await generateQRCode(
       m[3],
       logo,
-      ...decodeQRCodeOptionsFromFileName(options || {}, logoOptions || {}, [
-        fileName,
-        logoAlt
-      ])
+      ...decodeOptions(options || {}, logoOptions || {}, [fileName, logoAlt])
     );
     image.alt = m[2] || '';
     image.url = d;
@@ -87,10 +84,7 @@ export async function byLinkImageDummy(
     const d = await generateQRCode(
       link.url,
       logo,
-      ...decodeQRCodeOptionsFromFileName(options || {}, logoOptions || {}, [
-        fileName,
-        logoAlt
-      ])
+      ...decodeOptions(options || {}, logoOptions || {}, [fileName, logoAlt])
     );
     image.url = d;
   }

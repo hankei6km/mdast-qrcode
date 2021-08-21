@@ -38,7 +38,7 @@ const optionsDecoderLogo = [
     decoder: /(^|.+-)logo_fit-(\d+)(-|$)/
   }
 ];
-export function decodeQRCodeOptionsFromFileName(
+export function decodeOptions(
   options: QRCodeToDataURLOptions,
   logoOptions: LogoOptions,
   sources: string[]

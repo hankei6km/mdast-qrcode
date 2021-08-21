@@ -1,4 +1,4 @@
-import { getFileNameFromURL, mergeQuery, validLogoImageURL } from './util';
+import { getFileNameFromURL, replaceQuery, validLogoImageURL } from './util';
 
 describe('getFileNameFromURL()', () => {
   it('should retun filename from path', () => {
@@ -42,12 +42,12 @@ describe('validLogoImageURL()', () => {
   });
 });
 
-describe('mergeQuery()', () => {
+describe('replaceQuery()', () => {
   const toMap = (url: string) => {
     const query: { [key: string]: any } = {};
     const u = url.split('?', 2);
     if (u.length > 1) {
-      const p = new URLSearchParams();
+      const p = new URLSearchParams(u[1]);
       p.forEach((v, k) => {
         query[k] = v;
       });
@@ -56,26 +56,29 @@ describe('mergeQuery()', () => {
   };
   it('should add query to url', async () => {
     expect(
-      toMap(mergeQuery('http://hankei6km.github.io/logo.png', 'w=100&h=100'))
+      toMap(replaceQuery('http://hankei6km.github.io/logo.png', 'w=100&h=100'))
     ).toEqual(toMap('http://hankei6km.github.io/logo.png?w=100&h=100'));
     expect(
-      toMap(mergeQuery('http://hankei6km.github.io/logo.png', '?w=100&h=100'))
+      toMap(replaceQuery('http://hankei6km.github.io/logo.png', '?w=100&h=100'))
     ).toEqual(toMap('http://hankei6km.github.io/logo.png?w=100&h=100'));
+    expect(
+      toMap(replaceQuery('http://hankei6km.github.io/logo.png', 'abc'))
+    ).toEqual(toMap('http://hankei6km.github.io/logo.png?abc'));
   });
-  it('should merge query to url', async () => {
+  it('should replace query to url', async () => {
     expect(
-      toMap(mergeQuery('http://hankei6km.github.io/logo.png?h=100', 'w=100'))
-    ).toEqual(toMap('http://hankei6km.github.io/logo.png?w=100&h=100'));
+      toMap(replaceQuery('http://hankei6km.github.io/logo.png?h=100', 'w=100'))
+    ).toEqual(toMap('http://hankei6km.github.io/logo.png?w=100'));
+    expect(
+      toMap(replaceQuery('http://hankei6km.github.io/logo.png?h=100', 'abc'))
+    ).toEqual(toMap('http://hankei6km.github.io/logo.png?abc'));
   });
   it('should add blank', async () => {
     expect(
-      toMap(mergeQuery('http://hankei6km.github.io/logo.png?h=100', ''))
+      toMap(replaceQuery('http://hankei6km.github.io/logo.png?h=100', ''))
     ).toEqual(toMap('http://hankei6km.github.io/logo.png?h=100'));
     expect(
-      toMap(mergeQuery('http://hankei6km.github.io/logo.png?h=100', 'abc'))
-    ).toEqual(toMap('http://hankei6km.github.io/logo.png?h=100'));
-    expect(
-      toMap(mergeQuery('data:image/png;base64,iVBORw0KGgoAAAANS', 'w=100'))
+      toMap(replaceQuery('data:image/png;base64,iVBORw0KGgoAAAANS', 'w=100'))
     ).toEqual(toMap('data:image/png;base64,iVBORw0KGgoAAAANS'));
   });
 });

@@ -1,7 +1,7 @@
 import { createCanvas, loadImage } from 'canvas';
 import QRCode from 'qrcode';
 import { LogoOptions, logoOptionsDefaults } from '../qrcode';
-import { mergeQuery } from './util';
+import { replaceQuery } from './util';
 
 export async function generateQRCode(
   data: string,
@@ -27,7 +27,7 @@ export async function generateQRCode(
       ? logoOptions.query
       : logoOptionsDefaults.query;
   let logoImg = logo
-    ? await loadImage(mergeQuery(logo, logoQuery)).catch((err) => {
+    ? await loadImage(replaceQuery(logo, logoQuery)).catch((err) => {
         // TODO: error 画像を表示させる.
         console.error(`logo loadImage: ${err}`);
       })

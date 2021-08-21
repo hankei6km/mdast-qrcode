@@ -1,25 +1,6 @@
 import { Content } from 'mdast';
 import fromMarkdown from 'mdast-util-from-markdown';
-import { validLogoImageURL, pickLogo, selectTarget } from './select';
-
-describe('validLogoImageURL()', () => {
-  it('should return true', async () => {
-    expect(
-      validLogoImageURL('http://hankei6km.github.io/logo.png')
-    ).toBeTruthy();
-    expect(
-      validLogoImageURL('https://hankei6km.github.io/logo.png')
-    ).toBeTruthy();
-    expect(
-      validLogoImageURL('data:image/png;base64,iVBORw0KGgoAAAANSU')
-    ).toBeTruthy();
-  });
-  it('should return false', async () => {
-    expect(validLogoImageURL('/path/to/logo.png')).toBeFalsy();
-    expect(validLogoImageURL('logo.png')).toBeFalsy();
-    expect(validLogoImageURL('')).toBeFalsy();
-  });
-});
+import { pickLogo, selectTarget } from './select';
 
 describe('pickLogo()', () => {
   it('should pick "line break + image"', async () => {

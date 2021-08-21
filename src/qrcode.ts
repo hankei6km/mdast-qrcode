@@ -1,9 +1,9 @@
-import * as path from 'path';
 import { Root, Content, Image, Link } from 'mdast';
 import QRCode from 'qrcode';
 import { generateQRCode } from './lib/generate';
 import { decodeOptions } from './lib/options';
 import { selectTarget } from './lib/select';
+import { getFileNameFromURL } from './lib/util';
 
 const qrcodeInAlt = /(^|(^.*):)qrcode:(.+)$/;
 const QRCodeSourcKindValues = [
@@ -56,9 +56,9 @@ export async function byImageDummy(
   if (m && m[3]) {
     //const d = await QRCode.toDataURL(m[3], options);
     const logo = tree.length > 1 ? (tree[1] as Image).url || '' : '';
-    const logoFileName = path.parse(logo).name;
+    const logoFileName = getFileNameFromURL(logo);
     const logoAlt = tree.length > 1 ? (tree[1] as Image).alt || '' : '';
-    const fileName = path.parse(image.url || '').name;
+    const fileName = getFileNameFromURL(image.url);
     const d = await generateQRCode(
       m[3],
       logo,
@@ -84,9 +84,9 @@ export async function byLinkImageDummy(
     const image: Image = cc;
     //const d = await QRCode.toDataURL(tree.url, options);
     const logo = tree.length > 1 ? (tree[1] as Image).url || '' : '';
-    const logoFileName = path.parse(logo).name;
+    const logoFileName = getFileNameFromURL(logo);
     const logoAlt = tree.length > 1 ? (tree[1] as Image).alt || '' : '';
-    const fileName = path.parse(image.url || '').name;
+    const fileName = getFileNameFromURL(image.url);
     const d = await generateQRCode(
       link.url,
       logo,

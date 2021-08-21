@@ -1,23 +1,9 @@
 import * as path from 'path';
 import { Content, Image } from 'mdast';
 import { QRCodeSourcKind } from '../qrcode';
+import { validLogoImageURL } from './util';
 
 const dummyQrcodeFile = 'mdast-qrcode';
-
-export function validLogoImageURL(url: string): boolean {
-  try {
-    const protocol = new URL(url).protocol;
-    switch (protocol) {
-      case 'http:':
-      case 'https:':
-      case 'data:':
-        return true;
-    }
-  } catch (err) {
-    return false;
-  }
-  return false;
-}
 
 export function pickLogo(c: Content[], idx: number): number[] {
   const clen = c.length;

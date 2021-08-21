@@ -1,21 +1,21 @@
 import { decodeOptions } from './options';
 describe('decodeOptions()', () => {
-  it('should decode from file name', () => {
-    expect(decodeOptions({}, {}, ['mdast-qrcode-margin-4', ''])).toEqual([
+  it('should decode from file names / log alt', () => {
+    expect(decodeOptions({}, {}, ['mdast-qrcode-margin-4', '', ''])).toEqual([
       {
         margin: 4,
         color: {}
       },
       {}
     ]);
-    expect(decodeOptions({}, {}, ['mdast-qrcode-scale-4', ''])).toEqual([
+    expect(decodeOptions({}, {}, ['mdast-qrcode-scale-4', '', ''])).toEqual([
       {
         scale: 4,
         color: {}
       },
       {}
     ]);
-    expect(decodeOptions({}, {}, ['mdast-qrcode-width-200', ''])).toEqual([
+    expect(decodeOptions({}, {}, ['mdast-qrcode-width-200', '', ''])).toEqual([
       {
         width: 200,
         color: {}
@@ -23,7 +23,7 @@ describe('decodeOptions()', () => {
       {}
     ]);
     expect(
-      decodeOptions({}, {}, ['mdast-qrcode-scale-4-width-200', ''])
+      decodeOptions({}, {}, ['mdast-qrcode-scale-4-width-200', '', ''])
     ).toEqual([
       {
         scale: 4,
@@ -33,7 +33,7 @@ describe('decodeOptions()', () => {
       {}
     ]);
     expect(
-      decodeOptions({}, {}, ['mdast-qrcode-color_dark-111111FF', ''])
+      decodeOptions({}, {}, ['mdast-qrcode-color_dark-111111FF', '', ''])
     ).toEqual([
       {
         color: { dark: '#111111FF' }
@@ -41,7 +41,7 @@ describe('decodeOptions()', () => {
       {}
     ]);
     expect(
-      decodeOptions({}, {}, ['mdast-qrcode-color_light-EEEEEEFF', ''])
+      decodeOptions({}, {}, ['mdast-qrcode-color_light-EEEEEEFF', '', ''])
     ).toEqual([
       {
         color: { light: '#EEEEEEFF' }
@@ -51,6 +51,7 @@ describe('decodeOptions()', () => {
     expect(
       decodeOptions({}, {}, [
         'mdast-qrcode-color_light-EEEEEEFF-logo_position-right-bottom',
+        '',
         ''
       ])
     ).toEqual([
@@ -62,6 +63,7 @@ describe('decodeOptions()', () => {
     expect(
       decodeOptions({}, {}, [
         'mdast-qrcode-logo_margin-10-color_light-EEEEEEFF',
+        '',
         ''
       ])
     ).toEqual([
@@ -71,24 +73,35 @@ describe('decodeOptions()', () => {
       { margin: 10 }
     ]);
     expect(
-      decodeOptions({}, {}, ['mdast-qrcode-logo_fillstyle-FF0000FF', ''])
+      decodeOptions({}, {}, ['mdast-qrcode-logo_fillstyle-FF0000FF', '', ''])
     ).toEqual([{ color: {} }, { fillstyle: '#FF0000FF' }]);
     expect(
-      decodeOptions({}, {}, ['mdast-qrcode-logo_fillshape-circle', ''])
+      decodeOptions({}, {}, ['mdast-qrcode-logo_fillshape-circle', '', ''])
     ).toEqual([{ color: {} }, { fillshape: 'circle' }]);
     expect(
-      decodeOptions({}, {}, ['mdast-qrcode-logo_padding-20', ''])
+      decodeOptions({}, {}, ['mdast-qrcode-logo_padding-20', '', ''])
     ).toEqual([{ color: {} }, { padding: 20 }]);
   });
   it('should decode from multiple sources', () => {
     expect(
       decodeOptions({}, {}, [
         'mdast-qrcode-width-400-color_dark-00FF00FF-logo_padding-20-logo_fit-10',
-        'width-401-color_dark-00FFFFFF-logo_padding-21-logo_fit-11'
+        'logo-width-401-color_dark-00FFFFFF-logo_padding-21-logo_fit-11',
+        ''
       ])
     ).toEqual([
       { width: 401, color: { dark: '#00FFFFFF' } },
       { padding: 21, fit: 11 }
+    ]);
+    expect(
+      decodeOptions({}, {}, [
+        'mdast-qrcode-width-400-color_dark-00FF00FF-logo_padding-20-logo_fit-10',
+        'logo-width-401-color_dark-00FFFFFF-logo_padding-21-logo_fit-11',
+        'logo_fit-12'
+      ])
+    ).toEqual([
+      { width: 401, color: { dark: '#00FFFFFF' } },
+      { padding: 21, fit: 12 }
     ]);
   });
 });

@@ -56,12 +56,17 @@ export async function byImageDummy(
   if (m && m[3]) {
     //const d = await QRCode.toDataURL(m[3], options);
     const logo = tree.length > 1 ? (tree[1] as Image).url || '' : '';
+    const logoFileName = path.parse(logo).name;
     const logoAlt = tree.length > 1 ? (tree[1] as Image).alt || '' : '';
     const fileName = path.parse(image.url || '').name;
     const d = await generateQRCode(
       m[3],
       logo,
-      ...decodeOptions(options || {}, logoOptions || {}, [fileName, logoAlt])
+      ...decodeOptions(options || {}, logoOptions || {}, [
+        fileName,
+        logoAlt,
+        logoFileName
+      ])
     );
     image.alt = m[2] || '';
     image.url = d;
@@ -79,12 +84,17 @@ export async function byLinkImageDummy(
     const image: Image = cc;
     //const d = await QRCode.toDataURL(tree.url, options);
     const logo = tree.length > 1 ? (tree[1] as Image).url || '' : '';
+    const logoFileName = path.parse(logo).name;
     const logoAlt = tree.length > 1 ? (tree[1] as Image).alt || '' : '';
     const fileName = path.parse(image.url || '').name;
     const d = await generateQRCode(
       link.url,
       logo,
-      ...decodeOptions(options || {}, logoOptions || {}, [fileName, logoAlt])
+      ...decodeOptions(options || {}, logoOptions || {}, [
+        fileName,
+        logoAlt,
+        logoFileName
+      ])
     );
     image.url = d;
   }

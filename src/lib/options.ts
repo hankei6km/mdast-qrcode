@@ -41,8 +41,7 @@ const optionsDecoderLogo = [
 export function decodeQRCodeOptionsFromFileName(
   options: QRCodeToDataURLOptions,
   logoOptions: LogoOptions,
-  fileName: string,
-  alt: string
+  sources: string[]
 ): [QRCodeToDataURLOptions, LogoOptions] {
   const retOptions: any = Object.assign(
     {
@@ -82,9 +81,8 @@ export function decodeQRCodeOptionsFromFileName(
       }
     });
   };
-  decodeOptions(retOptions, fileName);
-  decodeOptions(retOptions, alt);
-  decodeLogoOptions(retLogoOptions, fileName);
-  decodeLogoOptions(retLogoOptions, alt);
+  sources.forEach((s) => decodeOptions(retOptions, s));
+  sources.forEach((s) => decodeLogoOptions(retLogoOptions, s));
+
   return [retOptions, retLogoOptions];
 }

@@ -61,12 +61,10 @@ export async function byImageDummy(
     const d = await generateQRCode(
       m[3],
       logo,
-      ...decodeQRCodeOptionsFromFileName(
-        options || {},
-        logoOptions || {},
+      ...decodeQRCodeOptionsFromFileName(options || {}, logoOptions || {}, [
         fileName,
         logoAlt
-      )
+      ])
     );
     image.alt = m[2] || '';
     image.url = d;
@@ -89,12 +87,10 @@ export async function byLinkImageDummy(
     const d = await generateQRCode(
       link.url,
       logo,
-      ...decodeQRCodeOptionsFromFileName(
-        options || {},
-        logoOptions || {},
+      ...decodeQRCodeOptionsFromFileName(options || {}, logoOptions || {}, [
         fileName,
         logoAlt
-      )
+      ])
     );
     image.url = d;
   }

@@ -20,6 +20,7 @@ export type LogoOptions = {
   margin?: number;
   padding?: number;
   fit?: number;
+  query?: string;
 };
 export const logoOptionsDefaults: Required<LogoOptions> = {
   position: 'center',
@@ -27,7 +28,8 @@ export const logoOptionsDefaults: Required<LogoOptions> = {
   fillstyle: '#FFFFFFFF',
   margin: 72,
   padding: 4,
-  fit: 35 // 面積で計算していないので注意
+  fit: 35, // 面積で計算していないので注意
+  query: ''
 };
 
 export async function byImageScheme(

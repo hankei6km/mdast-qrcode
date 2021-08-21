@@ -36,6 +36,10 @@ const optionsDecoderLogo = [
   {
     name: 'fit',
     decoder: /(^|.+-)logo_fit-(\d+)(-|$)/
+  },
+  {
+    name: 'query',
+    decoder: /(^|.+-)logo_query-(.+)$/
   }
 ];
 export function decodeOptions(
@@ -73,6 +77,8 @@ export function decodeOptions(
         // TODO: decoder 側で代入用の関数を指定できるように.
         if (o.name === 'position' || o.name === 'fillshape') {
           out[o.name] = m[2];
+        } else if (o.name === 'query') {
+          out[o.name] = decodeURIComponent(m[2]);
         } else if (o.name === 'fillstyle') {
           out[o.name] = `#${m[2]}`;
         } else {

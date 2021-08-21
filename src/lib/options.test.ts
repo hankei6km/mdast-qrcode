@@ -81,6 +81,20 @@ describe('decodeOptions()', () => {
     expect(
       decodeOptions({}, {}, ['mdast-qrcode-logo_padding-20', '', ''])
     ).toEqual([{ color: {} }, { padding: 20 }]);
+    expect(
+      decodeOptions({}, {}, [
+        'mdast-qrcode-logo_query-w=100&text=abc-123',
+        '',
+        ''
+      ])
+    ).toEqual([{ color: {} }, { query: 'w=100&text=abc-123' }]);
+    expect(
+      decodeOptions({}, {}, [
+        'mdast-qrcode-logo_query-w%3D100%26text%3Dabc-123',
+        '',
+        ''
+      ])
+    ).toEqual([{ color: {} }, { query: 'w=100&text=abc-123' }]);
   });
   it('should decode from multiple sources', () => {
     expect(

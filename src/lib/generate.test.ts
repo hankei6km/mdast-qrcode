@@ -344,6 +344,19 @@ describe('generateQRCode()', () => {
       62
     ]);
   });
+  it('should generate QRCode with logo(query)', async () => {
+    const res = generateQRCode(
+      'test data1',
+      'https://hankei6km.github.io/logo.png',
+      {},
+      { query: 'w=100' }
+    );
+    expect(await res).toEqual('check');
+    const { mockLoadImage } = require('canvas')._getMocks();
+    expect(mockLoadImage.mock.calls[0][0]).toEqual(
+      'https://hankei6km.github.io/logo.png?w=100'
+    );
+  });
   it('should skip logo image at loadImage failed', async () => {
     const mockConsoleError = jest.fn();
     console.error = mockConsoleError;

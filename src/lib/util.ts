@@ -27,3 +27,24 @@ export function validLogoImageURL(url: string): boolean {
   }
   return false;
 }
+
+export function mergeQuery(url: string, q: string): string {
+  try {
+    const { protocol } = new URL(url);
+    if (protocol === 'http:' || protocol === 'https:') {
+      const u = url.split('?', 2);
+      if (u.length > 1 && q) {
+        const addParams = new URLSearchParams(q);
+        const dstParams = new URLSearchParams(u[1]);
+        addParams.forEach((v, k) => {
+          dstParams.append(k, v);
+        });
+        return `${u[0]}?${dstParams.toString()}`;
+      } else if (q) {
+        const addParams = new URLSearchParams(q);
+        return `${url}?${addParams.toString()}`;
+      }
+    }
+  } catch (err) {}
+  return url;
+}

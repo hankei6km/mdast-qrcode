@@ -6,21 +6,21 @@ describe('decodeOptions()', () => {
         margin: 4,
         color: {}
       },
-      {}
+      { logo: {} }
     ]);
     expect(decodeOptions({}, {}, ['mdast-qrcode-scale-4', '', ''])).toEqual([
       {
         scale: 4,
         color: {}
       },
-      {}
+      { logo: {} }
     ]);
     expect(decodeOptions({}, {}, ['mdast-qrcode-width-200', '', ''])).toEqual([
       {
         width: 200,
         color: {}
       },
-      {}
+      { logo: {} }
     ]);
     expect(
       decodeOptions({}, {}, ['mdast-qrcode-scale-4-width-200', '', ''])
@@ -30,7 +30,7 @@ describe('decodeOptions()', () => {
         width: 200,
         color: {}
       },
-      {}
+      { logo: {} }
     ]);
     expect(
       decodeOptions({}, {}, ['mdast-qrcode-color_dark-111111FF', '', ''])
@@ -38,7 +38,7 @@ describe('decodeOptions()', () => {
       {
         color: { dark: '#111111FF' }
       },
-      {}
+      { logo: {} }
     ]);
     expect(
       decodeOptions({}, {}, ['mdast-qrcode-color_light-EEEEEEFF', '', ''])
@@ -46,7 +46,7 @@ describe('decodeOptions()', () => {
       {
         color: { light: '#EEEEEEFF' }
       },
-      {}
+      { logo: {} }
     ]);
     expect(
       decodeOptions({}, {}, [
@@ -58,7 +58,7 @@ describe('decodeOptions()', () => {
       {
         color: { light: '#EEEEEEFF' }
       },
-      { position: 'right-bottom' }
+      { logo: { position: 'right-bottom' } }
     ]);
     expect(
       decodeOptions({}, {}, [
@@ -70,31 +70,31 @@ describe('decodeOptions()', () => {
       {
         color: { light: '#EEEEEEFF' }
       },
-      { margin: 10 }
+      { logo: { margin: 10 } }
     ]);
     expect(
       decodeOptions({}, {}, ['mdast-qrcode-logo_fillstyle-FF0000FF', '', ''])
-    ).toEqual([{ color: {} }, { fillstyle: '#FF0000FF' }]);
+    ).toEqual([{ color: {} }, { logo: { fillstyle: '#FF0000FF' } }]);
     expect(
       decodeOptions({}, {}, ['mdast-qrcode-logo_fillshape-circle', '', ''])
-    ).toEqual([{ color: {} }, { fillshape: 'circle' }]);
+    ).toEqual([{ color: {} }, { logo: { fillshape: 'circle' } }]);
     expect(
       decodeOptions({}, {}, ['mdast-qrcode-logo_padding-20', '', ''])
-    ).toEqual([{ color: {} }, { padding: 20 }]);
+    ).toEqual([{ color: {} }, { logo: { padding: 20 } }]);
     expect(
       decodeOptions({}, {}, [
         'mdast-qrcode-logo_query-w=100&text=abc-123',
         '',
         ''
       ])
-    ).toEqual([{ color: {} }, { query: 'w=100&text=abc-123' }]);
+    ).toEqual([{ color: {} }, { logo: { query: 'w=100&text=abc-123' } }]);
     expect(
       decodeOptions({}, {}, [
         'mdast-qrcode-logo_query-w%3D100%26text%3Dabc-123',
         '',
         ''
       ])
-    ).toEqual([{ color: {} }, { query: 'w=100&text=abc-123' }]);
+    ).toEqual([{ color: {} }, { logo: { query: 'w=100&text=abc-123' } }]);
   });
   it('should decode from multiple sources', () => {
     expect(
@@ -105,7 +105,7 @@ describe('decodeOptions()', () => {
       ])
     ).toEqual([
       { width: 401, color: { dark: '#00FFFFFF' } },
-      { padding: 21, fit: 11 }
+      { logo: { padding: 21, fit: 11 } }
     ]);
     expect(
       decodeOptions({}, {}, [
@@ -115,7 +115,7 @@ describe('decodeOptions()', () => {
       ])
     ).toEqual([
       { width: 401, color: { dark: '#00FFFFFF' } },
-      { padding: 21, fit: 12 }
+      { logo: { padding: 21, fit: 12 } }
     ]);
   });
 });

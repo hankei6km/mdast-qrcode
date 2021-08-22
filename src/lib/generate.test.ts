@@ -197,7 +197,7 @@ describe('generateQRCode()', () => {
       'test data1',
       'logo',
       {},
-      { position: 'right-bottom' }
+      { logo: { position: 'right-bottom' } }
     );
     expect(await res).toEqual('check');
     const {
@@ -288,7 +288,7 @@ describe('generateQRCode()', () => {
         width: 200,
         height: 200
       });
-    const res = generateQRCode('test data1', 'logo', {}, { fit: 0 });
+    const res = generateQRCode('test data1', 'logo', {}, { logo: { fit: 0 } });
     expect(await res).toEqual('check');
     const { mockDrawImage } = require('canvas')._getMocks();
     expect(mockDrawImage.mock.calls[1]).toEqual([
@@ -300,7 +300,12 @@ describe('generateQRCode()', () => {
     ]);
   });
   it('should generate QRCode with logo(padding)', async () => {
-    const res = generateQRCode('test data1', 'logo', {}, { padding: 10 });
+    const res = generateQRCode(
+      'test data1',
+      'logo',
+      {},
+      { logo: { padding: 10 } }
+    );
     expect(await res).toEqual('check');
     const {
       mockArc,
@@ -325,7 +330,12 @@ describe('generateQRCode()', () => {
     ]);
   });
   it('should generate QRCode with logo(circle)', async () => {
-    const res = generateQRCode('test data1', 'logo', {}, { fillshape: 'rect' });
+    const res = generateQRCode(
+      'test data1',
+      'logo',
+      {},
+      { logo: { fillshape: 'rect' } }
+    );
     expect(await res).toEqual('check');
     const {
       mockBeginPath,
@@ -353,7 +363,7 @@ describe('generateQRCode()', () => {
       'test data1',
       'https://hankei6km.github.io/logo.png',
       {},
-      { query: 'w=100' }
+      { logo: { query: 'w=100' } }
     );
     expect(await res).toEqual('check');
     const { mockLoadImage } = require('canvas')._getMocks();
@@ -372,7 +382,7 @@ describe('generateQRCode()', () => {
         width: 200,
         height: 200
       });
-    const res = generateQRCode('test data1', 'logo', {}, { fit: 0 });
+    const res = generateQRCode('test data1', 'logo', {}, { logo: { fit: 0 } });
     expect(await res).toEqual('check');
     expect(mockConsoleError.mock.calls.length).toEqual(1);
     expect(mockConsoleError.mock.calls[0][0]).toEqual(

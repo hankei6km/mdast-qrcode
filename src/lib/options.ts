@@ -1,5 +1,5 @@
 import { QRCodeToDataURLOptions } from 'qrcode';
-import { LogoOptions } from '../qrcode';
+import { MdqrOptions } from '../qrcode';
 
 // type OptionsInFileName = {
 //   name: 'margin' | 'scale' | 'width';
@@ -44,16 +44,19 @@ const optionsDecoderLogo = [
 ];
 export function decodeOptions(
   options: QRCodeToDataURLOptions,
-  logoOptions: LogoOptions,
+  mdqrOptions: MdqrOptions,
   sources: string[]
-): [QRCodeToDataURLOptions, LogoOptions] {
+): [QRCodeToDataURLOptions, MdqrOptions] {
   const retOptions: any = Object.assign(
     {
       color: {}
     },
     options || {}
   );
-  const retLogoOptions: any = Object.assign({}, logoOptions || {});
+  const retLogoOptions: any = Object.assign(
+    { logo: {} },
+    mdqrOptions || { logo: {} }
+  );
   //  fileName と alt からでコードするので関数化してある.
   // TODO: ユーティリティ化などを検討.
   const decodeOptions = (out: any, src: string) => {
@@ -76,13 +79,13 @@ export function decodeOptions(
       if (m) {
         // TODO: decoder 側で代入用の関数を指定できるように.
         if (o.name === 'position' || o.name === 'fillshape') {
-          out[o.name] = m[2];
+          out.logo[o.name] = m[2];
         } else if (o.name === 'query') {
-          out[o.name] = decodeURIComponent(m[2]);
+          out.logo[o.name] = decodeURIComponent(m[2]);
         } else if (o.name === 'fillstyle') {
-          out[o.name] = `#${m[2]}`;
+          out.logo[o.name] = `#${m[2]}`;
         } else {
-          out[o.name] = parseInt(m[2], 10);
+          out.logo[o.name] = parseInt(m[2], 10);
         }
       }
     });

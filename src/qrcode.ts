@@ -13,29 +13,35 @@ const QRCodeSourcKindValues = [
   'link-image-dummy'
 ] as const;
 export type QRCodeSourcKind = typeof QRCodeSourcKindValues[number];
-export type LogoOptions = {
-  position?: 'center' | 'right-bottom';
-  fillstyle?: string;
-  fillshape?: 'rect' | 'circle';
-  margin?: number;
-  padding?: number;
-  fit?: number;
-  query?: string;
+export type MdqrOptions = {
+  logo?: {
+    position?: 'center' | 'right-bottom';
+    fillstyle?: string;
+    fillshape?: 'rect' | 'circle';
+    margin?: number;
+    padding?: number;
+    fit?: number;
+    query?: string;
+  };
 };
-export const logoOptionsDefaults: Required<LogoOptions> = {
-  position: 'center',
-  fillshape: 'circle',
-  fillstyle: '#FFFFFFFF',
-  margin: 72,
-  padding: 4,
-  fit: 35, // 面積で計算していないので注意
-  query: ''
+export const mdqrOptionsDefaults: Required<MdqrOptions> & {
+  logo: Required<MdqrOptions['logo']>;
+} = {
+  logo: {
+    position: 'center',
+    fillshape: 'circle',
+    fillstyle: '#FFFFFFFF',
+    margin: 72,
+    padding: 4,
+    fit: 35, // 面積で計算していないので注意
+    query: ''
+  }
 };
 
 export async function byImageScheme(
   tree: Content[],
   options?: QRCode.QRCodeToDataURLOptions,
-  logoOptions?: LogoOptions
+  logoOptions?: MdqrOptions
 ) {
   const image = tree[0] as Image;
   const url: string = image.url || '';
@@ -49,7 +55,7 @@ export async function byImageScheme(
 export async function byImageDummy(
   tree: Content[],
   options?: QRCode.QRCodeToDataURLOptions,
-  logoOptions?: LogoOptions
+  logoOptions?: MdqrOptions
 ) {
   const image = tree[0] as Image;
   const alt: string = image.alt || '';
@@ -64,7 +70,7 @@ export async function byImageDummy(
     const d = await generateQRCode(
       m[3],
       logo,
-      ...decodeOptions(options || {}, logoOptions || {}, [
+      ...decodeOptions(options || {}, logoOptions || { logo: {} }, [
         fileName,
         logoAlt,
         logoFileName
@@ -78,7 +84,7 @@ export async function byImageDummy(
 export async function byLinkImageDummy(
   tree: Content[],
   options?: QRCode.QRCodeToDataURLOptions,
-  logoOptions?: LogoOptions
+  logoOptions?: MdqrOptions
 ) {
   const link = tree[0] as Link;
   const cc = link.children[0];
@@ -92,7 +98,7 @@ export async function byLinkImageDummy(
     const d = await generateQRCode(
       link.url,
       logo,
-      ...decodeOptions(options || {}, logoOptions || {}, [
+      ...decodeOptions(options || {}, logoOptions || { logo: {} }, [
         fileName,
         logoAlt,
         logoFileName
@@ -113,7 +119,7 @@ export function addRemoveIdxs(r: number[], a: number[]) {
 export async function toImageDataURL(
   tree: Root,
   options?: QRCode.QRCodeToDataURLOptions,
-  logoOptions: LogoOptions = { position: 'center' }
+  logoOptions: MdqrOptions = { logo: { position: 'center' } }
 ): Promise<Root> {
   if (tree.type === 'root') {
     const l = tree.children.length;

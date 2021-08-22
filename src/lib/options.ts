@@ -49,20 +49,22 @@ const optionsDecoderFormat = [
   },
   { name: 'quality', decoder: /(^|.+-)format_quality-(\d+)(-|$)/ }
 ];
+
 export function decodeOptions(
   options: QRCodeToDataURLOptions,
   mdqrOptions: MdqrOptions,
   sources: string[]
 ): [QRCodeToDataURLOptions, MdqrOptions] {
-  const retOptions: any = Object.assign(
-    {
-      color: {}
-    },
-    options || {}
+  const retOptions: any = JSON.parse(
+    JSON.stringify(Object.assign({ color: {} }, options) || { color: {} })
   );
-  const retLogoOptions: any = Object.assign(
-    { logo: {}, format: {} },
-    mdqrOptions || { logo: {}, format: {} }
+  const retLogoOptions: any = JSON.parse(
+    JSON.stringify(
+      Object.assign({ logo: {}, format: {} }, mdqrOptions) || {
+        logo: {},
+        format: {}
+      }
+    )
   );
   //  fileName と alt からでコードするので関数化してある.
   // TODO: ユーティリティ化などを検討.

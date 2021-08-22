@@ -7,6 +7,7 @@ jest.mock('canvas', () => {
   const mockBeginPath = jest.fn();
   const mockArc = jest.fn();
   const mockClip = jest.fn();
+  const mockClearRect = jest.fn();
   const mockFillRect = jest.fn();
   const mockGetContext = jest.fn();
   const mockToDataURL = jest.fn();
@@ -17,6 +18,7 @@ jest.mock('canvas', () => {
     mockBeginPath.mockReset();
     mockArc.mockReset();
     mockClip.mockReset();
+    mockClearRect.mockReset();
     mockFillRect.mockReset();
     mockGetContext.mockReset();
     mockGetContext.mockReturnValue({
@@ -24,6 +26,7 @@ jest.mock('canvas', () => {
       arc: mockArc,
       clip: mockClip,
       drawImage: mockDrawImage,
+      clearRect: mockClearRect,
       fillRect: mockFillRect
     });
     mockToDataURL.mockReset();
@@ -54,6 +57,7 @@ jest.mock('canvas', () => {
       mockArc,
       mockClip,
       mockDrawImage,
+      mockClearRect,
       mockFillRect,
       mockGetContext,
       mockToDataURL,

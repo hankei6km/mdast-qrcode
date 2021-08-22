@@ -124,6 +124,16 @@ export async function generateQRCode(
       w - logoPadding * 2,
       h - logoPadding * 2
     );
+    logoImg = null;
   }
-  return canvas.toDataURL('image/png');
+  const ret = canvas.toDataURL('image/png');
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // 環境が違うのでそんまま適用できないが、
+  // できるだけメモリーが開放されるように.
+  // https://tech.mobilefactory.jp/entry/2019/12/17/143000
+  canvas.height = 0;
+  canvas.width = 0;
+
+  return ret;
 }

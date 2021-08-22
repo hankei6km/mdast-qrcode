@@ -10,7 +10,7 @@ jest.mock('canvas', () => {
   const mockClearRect = jest.fn();
   const mockFillRect = jest.fn();
   const mockGetContext = jest.fn();
-  const mockToDataURL = jest.fn();
+  const mockCanvasToDataURL = jest.fn();
   const mockCreateCanvas = jest.fn();
   const mockLoadImage = jest.fn();
   const reset = () => {
@@ -29,12 +29,12 @@ jest.mock('canvas', () => {
       clearRect: mockClearRect,
       fillRect: mockFillRect
     });
-    mockToDataURL.mockReset();
-    mockToDataURL.mockReturnValue('check');
+    mockCanvasToDataURL.mockReset();
+    mockCanvasToDataURL.mockReturnValue('check');
     mockCreateCanvas.mockReset();
     mockCreateCanvas.mockReturnValue({
       getContext: mockGetContext,
-      toDataURL: mockToDataURL
+      toDataURL: mockCanvasToDataURL
     });
     mockLoadImage.mockReset();
     mockLoadImage
@@ -60,7 +60,7 @@ jest.mock('canvas', () => {
       mockClearRect,
       mockFillRect,
       mockGetContext,
-      mockToDataURL,
+      mockCanvasToDataURL,
       mockCreateCanvas,
       mockLoadImage
     })
@@ -97,7 +97,8 @@ describe('generateQRCode()', () => {
       mockLoadImage,
       mockCreateCanvas,
       mockFillRect,
-      mockDrawImage
+      mockDrawImage,
+      mockCanvasToDataURL
     } = require('canvas')._getMocks();
     const { mockToDataURL } = require('qrcode')._getMocks();
     expect(mockLoadImage.mock.calls.length).toEqual(1);
@@ -124,6 +125,8 @@ describe('generateQRCode()', () => {
       100,
       100
     ]);
+    expect(mockCanvasToDataURL.mock.calls.length).toEqual(1);
+    expect(mockCanvasToDataURL.mock.calls[0]).toEqual(['image/png']);
   });
   it('should generate QRCode with logo', async () => {
     const res = generateQRCode('test data1', 'logo');
@@ -370,6 +373,17 @@ describe('generateQRCode()', () => {
     expect(mockLoadImage.mock.calls[0][0]).toEqual(
       'https://hankei6km.github.io/logo.png?w=100'
     );
+  });
+  it('should save QRCode to jpeg format', async () => {
+    const res = generateQRCode(
+      'test data1',
+      'https://hankei6km.github.io/logo.png',
+      {},
+      { format: { type: 'jpeg', quality: 0.5 } }
+    );
+    expect(await res).toEqual('check');
+    const { mockCanvasToDataURL } = require('canvas')._getMocks();
+    expect(mockCanvasToDataURL.mock.calls[0]).toEqual(['image/jpeg', 0.5]);
   });
   it('should skip logo image at loadImage failed', async () => {
     const mockConsoleError = jest.fn();

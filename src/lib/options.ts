@@ -42,6 +42,13 @@ const optionsDecoderLogo = [
     decoder: /(^|.+-)logo_query-(.+)$/
   }
 ];
+const optionsDecoderFormat = [
+  {
+    name: 'type',
+    decoder: /(^|.+-)format_type-(png|jpeg)(-|$)/
+  },
+  { name: 'quality', decoder: /(^|.+-)format_quality-(\d+)(-|$)/ }
+];
 export function decodeOptions(
   options: QRCodeToDataURLOptions,
   mdqrOptions: MdqrOptions,
@@ -54,8 +61,8 @@ export function decodeOptions(
     options || {}
   );
   const retLogoOptions: any = Object.assign(
-    { logo: {} },
-    mdqrOptions || { logo: {} }
+    { logo: {}, format: {} },
+    mdqrOptions || { logo: {}, format: {} }
   );
   //  fileName と alt からでコードするので関数化してある.
   // TODO: ユーティリティ化などを検討.
@@ -86,6 +93,17 @@ export function decodeOptions(
           out.logo[o.name] = `#${m[2]}`;
         } else {
           out.logo[o.name] = parseInt(m[2], 10);
+        }
+      }
+    });
+    optionsDecoderFormat.forEach((o) => {
+      const m = src.match(o.decoder);
+      if (m) {
+        // TODO: decoder 側で代入用の関数を指定できるように.
+        if (o.name === 'type') {
+          out.format[o.name] = m[2];
+        } else if (o.name === 'quality') {
+          out.format[o.name] = parseInt(m[2], 10) / 100;
         }
       }
     });

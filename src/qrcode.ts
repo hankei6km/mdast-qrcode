@@ -23,6 +23,10 @@ export type MdqrOptions = {
     fit?: number;
     query?: string;
   };
+  format?: {
+    type?: 'png' | 'jpeg';
+    quality?: number;
+  };
 };
 export const mdqrOptionsDefaults: Required<MdqrOptions> & {
   logo: Required<MdqrOptions['logo']>;
@@ -35,6 +39,10 @@ export const mdqrOptionsDefaults: Required<MdqrOptions> & {
     padding: 4,
     fit: 35, // 面積で計算していないので注意
     query: ''
+  },
+  format: {
+    type: 'png',
+    quality: 0.92
   }
 };
 

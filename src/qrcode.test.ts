@@ -126,7 +126,8 @@ describe('toDataURL()', () => {
     expect(mockGenerateQRCode.mock.calls[0][3]).toEqual({
       logo: {
         position: 'right-bottom'
-      }
+      },
+      format: {}
     });
   });
   it('should pass options from file name(link)', async () => {
@@ -138,7 +139,8 @@ describe('toDataURL()', () => {
     expect(mockGenerateQRCode.mock.calls[0][3]).toEqual({
       logo: {
         position: 'right-bottom'
-      }
+      },
+      format: {}
     });
   });
   it('should pass logo options from logo filename(image)', async () => {
@@ -150,7 +152,8 @@ describe('toDataURL()', () => {
     expect(mockGenerateQRCode.mock.calls[0][3]).toEqual({
       logo: {
         position: 'right-bottom'
-      }
+      },
+      format: {}
     });
   });
   it('should pass options from logo filename(link)', async () => {
@@ -162,7 +165,8 @@ describe('toDataURL()', () => {
     expect(mockGenerateQRCode.mock.calls[0][3]).toEqual({
       logo: {
         position: 'right-bottom'
-      }
+      },
+      format: {}
     });
   });
   it('should pass logo options from logo alt(image)', async () => {
@@ -174,7 +178,8 @@ describe('toDataURL()', () => {
     expect(mockGenerateQRCode.mock.calls[0][3]).toEqual({
       logo: {
         position: 'right-bottom'
-      }
+      },
+      format: {}
     });
   });
   it('should pass options from logo alt(link)', async () => {
@@ -186,7 +191,8 @@ describe('toDataURL()', () => {
     expect(mockGenerateQRCode.mock.calls[0][3]).toEqual({
       logo: {
         position: 'right-bottom'
-      }
+      },
+      format: {}
     });
   });
 });

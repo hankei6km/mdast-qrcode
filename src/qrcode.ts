@@ -35,9 +35,9 @@ export const mdqrOptionsDefaults: Required<MdqrOptions> & {
     position: 'center',
     fillshape: 'circle',
     fillstyle: '#FFFFFFFF',
-    margin: 72,
+    margin: 55,
     padding: 4,
-    fit: 35, // 面積で計算していないので注意
+    fit: 25, // 面積で計算していないので注意
     query: ''
   },
   format: {

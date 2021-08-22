@@ -35,7 +35,7 @@ export async function generateQRCode(
   const options = Object.assign({}, inOptions);
   if (logoImg) {
     options.errorCorrectionLevel = 'H';
-    options.width = options.width !== undefined ? options.width : 300;
+    options.width = options.width !== undefined ? options.width : 250;
   }
   const logoPosition =
     mdqrOptions.logo.position !== undefined

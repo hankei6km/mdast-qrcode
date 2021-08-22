@@ -148,7 +148,7 @@ describe('generateQRCode()', () => {
       'test data1',
       {
         errorCorrectionLevel: 'H',
-        width: 300,
+        width: 250,
         margin: 4,
         scale: 4,
         color: {
@@ -160,7 +160,7 @@ describe('generateQRCode()', () => {
     expect(mockCreateCanvas.mock.calls[0]).toEqual([200, 200]);
     expect(mockBeginPath.mock.calls.length).toEqual(2);
     expect(mockFillRect.mock.calls.length).toEqual(1);
-    expect(mockFillRect.mock.calls[0]).toEqual([65, 65, 70, 70]);
+    expect(mockFillRect.mock.calls[0]).toEqual([75, 75, 50, 50]);
     expect(mockDrawImage.mock.calls.length).toEqual(2);
     expect(mockClip.mock.calls.length).toEqual(2);
     expect(mockArc.mock.calls.length).toEqual(2);
@@ -174,7 +174,7 @@ describe('generateQRCode()', () => {
     expect(mockArc.mock.calls[0]).toEqual([
       100,
       100,
-      35,
+      25,
       0,
       2 * Math.PI,
       false
@@ -182,17 +182,17 @@ describe('generateQRCode()', () => {
     expect(mockArc.mock.calls[1]).toEqual([
       100,
       100,
-      31,
+      21,
       0,
       2 * Math.PI,
       false
     ]);
     expect(mockDrawImage.mock.calls[1]).toEqual([
       { width: 100, height: 100 },
-      69,
-      69,
-      62,
-      62
+      79,
+      79,
+      42,
+      42
     ]);
   });
   it('should generate QRCode with logo(right-bottom)', async () => {
@@ -208,7 +208,7 @@ describe('generateQRCode()', () => {
       mockFillRect,
       mockDrawImage
     } = require('canvas')._getMocks();
-    expect(mockFillRect.mock.calls[0]).toEqual([58, 58, 70, 70]);
+    expect(mockFillRect.mock.calls[0]).toEqual([95, 95, 50, 50]);
     expect(mockDrawImage.mock.calls[0]).toEqual([
       { width: 200, height: 200 },
       0,
@@ -223,14 +223,28 @@ describe('generateQRCode()', () => {
       200,
       200
     ]);
-    expect(mockArc.mock.calls[0]).toEqual([93, 93, 35, 0, 2 * Math.PI, false]);
-    expect(mockArc.mock.calls[1]).toEqual([93, 93, 31, 0, 2 * Math.PI, false]);
+    expect(mockArc.mock.calls[0]).toEqual([
+      120,
+      120,
+      25,
+      0,
+      2 * Math.PI,
+      false
+    ]);
+    expect(mockArc.mock.calls[1]).toEqual([
+      120,
+      120,
+      21,
+      0,
+      2 * Math.PI,
+      false
+    ]);
     expect(mockDrawImage.mock.calls[1]).toEqual([
       { width: 100, height: 100 },
-      62,
-      62,
-      62,
-      62
+      99,
+      99,
+      42,
+      42
     ]);
   });
   it('should generate QRCode with logo(w > h)', async () => {
@@ -250,10 +264,10 @@ describe('generateQRCode()', () => {
     const { mockDrawImage } = require('canvas')._getMocks();
     expect(mockDrawImage.mock.calls[1]).toEqual([
       { width: 100, height: 60 },
-      69,
-      83,
-      62,
-      34
+      79,
+      89,
+      42,
+      22
     ]);
   });
   it('should generate QRCode with logo(w < h)', async () => {
@@ -273,10 +287,10 @@ describe('generateQRCode()', () => {
     const { mockDrawImage } = require('canvas')._getMocks();
     expect(mockDrawImage.mock.calls[1]).toEqual([
       { width: 60, height: 100 },
-      83,
-      69,
-      34,
-      62
+      89,
+      79,
+      22,
+      42
     ]);
   });
   it('should generate QRCode with logo(disable fit)', async () => {
@@ -315,21 +329,21 @@ describe('generateQRCode()', () => {
       mockFillRect,
       mockDrawImage
     } = require('canvas')._getMocks();
-    expect(mockFillRect.mock.calls[0]).toEqual([65, 65, 70, 70]);
+    expect(mockFillRect.mock.calls[0]).toEqual([75, 75, 50, 50]);
     expect(mockArc.mock.calls[1]).toEqual([
       100,
       100,
-      25,
+      15,
       0,
       2 * Math.PI,
       false
     ]);
     expect(mockDrawImage.mock.calls[1]).toEqual([
       { width: 100, height: 100 },
-      75,
-      75,
-      50,
-      50
+      85,
+      85,
+      30,
+      30
     ]);
   });
   it('should generate QRCode with logo(circle)', async () => {
@@ -350,15 +364,15 @@ describe('generateQRCode()', () => {
     expect(mockFillRect.mock.calls.length).toEqual(1);
     expect(mockBeginPath.mock.calls.length).toEqual(0);
     expect(mockFillRect.mock.calls.length).toEqual(1);
-    expect(mockFillRect.mock.calls[0]).toEqual([65, 65, 70, 70]);
+    expect(mockFillRect.mock.calls[0]).toEqual([75, 75, 50, 50]);
     expect(mockArc.mock.calls.length).toEqual(0);
     expect(mockClip.mock.calls.length).toEqual(0);
     expect(mockDrawImage.mock.calls[1]).toEqual([
       { width: 100, height: 100 },
-      69,
-      69,
-      62,
-      62
+      79,
+      79,
+      42,
+      42
     ]);
   });
   it('should generate QRCode with logo(query)', async () => {

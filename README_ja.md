@@ -153,7 +153,7 @@ qrcode options:
 - colorr.light: `-color_light-<RRGGBBAA>` 
 - color.dark: `-color_light-<RRGGBBAA>` 
 
-logo options:
+mdqr logo options:
 
 - position: `-logo_position-<center | right-bottom>`
 - fillstyle: `-logo_fillstyle-<<RRGGBBAA>>`
@@ -161,11 +161,16 @@ logo options:
 - margin: `-logo_margin-<number>`
 - paddinfg: `-logo_padding-<number>`
 - fit: `-logo_fit-<number>`
+- query: `-logo_query-<string>` (オプション文字列全体の末尾に指定)
+
+mdqr format options:
+- type: `-format_type-<png | jpeg>`
+- quality: `-format_quality-<number>` (単位は `%`)
 
 
 ## API
 
-### `toImageDataURL(tree[, options, logoOptions])`
+### `toImageDataURL(tree[, options, mdqrOptions])`
 
 [mdast](https://github.com/syntax-tree/mdast) の画像に含まれる "qrcode:" を変換。
 画像は `root / paragraph / image` または `root / paragraph / link / image`  階層のみサポートしている。
@@ -177,47 +182,75 @@ QRCode の直後に `image` がある場合、その `image` はロゴ画像と�
 
 options は [QRCode.toDataURL](https://www.npmjs.com/package/qrcode#todataurltext-options-cberror-url-1) へ渡される。
 
-#### logoOptions
+#### mdqrOptions
+
+mdast-qrcode 用のオプション。
+
+##### logo
 
 logo を重ねるときのオプション。
 
-##### `position`
+###### `position`
 
  `center` | `right-bottom`  
 
 deault: `center`
 
-##### `fillstyle`
+###### `fillstyle`
 
  `#RRGGBBAA`
 
 deault: `#FFFFFFFF`
 
-##### `fillshape`
+###### `fillshape`
 
  `circle` | `rect`
 
 deault: `circle`
 
-##### `margin`
+###### `margin`
 
  `<number>`
 
-default: `72`
+default: `55`
 
-##### `padding`
+###### `padding`
 
  `<number>`
 
 default: `4`
 
-##### `fit`
+###### `fit`
 
 `<number>`
 
 QRCode の幅に対する比率(単位は `%`)。 `0` を渡すと無効化。
 
 default: `35`
+
+###### `query`
+
+`<string>`
+
+logo image ni
+
+ロゴ画像の URL に付加される文字列。
+
+#### `format`
+
+QR code を DataURL でエンコードするときのオプション。
+
+##### `type`
+ 
+  `png` | `jpeg`
+
+default: `png`
+
+##### `quality`
+ 
+  `number`
+
+default: `0.92`
 
 
 #### returns
@@ -255,3 +288,4 @@ MIT License
 
 Copyright (c) 2021 hankei6km
 
+QRコードの商標はデンソーウェーブの登録商標です

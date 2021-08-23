@@ -153,7 +153,7 @@ qrcode options:
 - colorr.light: `-color_light-<RRGGBBAA>` 
 - color.dark: `-color_light-<RRGGBBAA>` 
 
-logo options:
+mdqr logo options:
 
 - position: `-logo_position-<center | right-bottom>`
 - fillstyle: `-logo_fillstyle-<<RRGGBBAA>>`
@@ -161,11 +161,16 @@ logo options:
 - margin: `-logo_margin-<number>`
 - paddinfg: `-logo_padding-<number>`
 - fit: `-logo_fit-<number>`
+- query: `-logo_query-<string>` (describe in eend of options string)
+
+mdqr format options:
+- type: `-format_type-<png | jpeg>`
+- quality: `-format_quality-<number>` (unit: `%`)
 
 
 ## API
 
-### `toImageDataURL(tree[, options, logoOptions])`
+### `toImageDataURL(tree[, options, mdqrOptions])`
 
 convert "qrcode:" to dataURL in Image URL of [mdast](https://github.com/syntax-tree/mdast).
 Images only support `root / paragraph / image` or `root / paragraph / link / image`  hierarchy.
@@ -176,41 +181,45 @@ If `image` is exist after the QRCode, that` image` will be converted as logo ima
 
 Options are passed to [QRCode.toDataURL](https://www.npmjs.com/package/qrcode#todataurltext-options-cberror-url-1).
 
-#### logoOptions
+#### mdqrOptions
+
+Options to mdast-qrcode.
+
+##### logo
 
 Options to overlay a logo image.
 
-##### `position`
+###### `position`
 
  `center` | `right-bottom`  
 
 deault: `center`
 
-##### `fillstyle`
+###### `fillstyle`
 
  `#RRGGBBAA`
 
 deault: `#FFFFFFFF`
 
-##### `fillshape`
+###### `fillshape`
 
  `circle` | `rect`
 
 deault: `circle`
 
-##### `margin`
+###### `margin`
 
  `<number>`
 
-default: `72`
+default: `55`
 
-##### `padding`
+###### `padding`
 
  `<number>`
 
 default: `4`
 
-##### `fit`
+###### `fit`
 
 `<number>`
 
@@ -218,6 +227,13 @@ The ratio to QR Code width(unit is `%`). It disabled by passing `0`.
 
 default: `35` 
 
+###### `query`
+
+`<string>`
+
+logo image ni
+
+It appened to URL of logo image.
 
 #### returns
 
@@ -254,3 +270,5 @@ In addition to `:qrcode` convertion, Markdown string are also affected by [toMar
 MIT License
 
 Copyright (c) 2021 hankei6km
+
+The word "QR Code" is registered trademark of: DENSO WAVE INCORPORATED

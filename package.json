@@ -1,6 +1,6 @@
 {
   "name": "mdast-qrcode",
-  "version": "0.3.0-13",
+  "version": "0.3.0-14",
   "description": "convert \"qrcode:\" to dataURL",
   "license": "MIT",
   "author": "hankei6km <hankei6km@gmail.com> (https://github.com/hankei6km)",

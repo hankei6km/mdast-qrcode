@@ -86,22 +86,13 @@ describe('toDataURL()', () => {
       '# title5\n\n[![alt5](/path/to/qrcode.png)](url5)\ntext5\n'
     );
   });
-  it('should convert "qrcode:" with logo them remove logo contents', async () => {
-    const tree = fromMarkdown(
-      '# title6\n\ntest6-1\n![alt6](qrcode:test6)\n![](https://hankei6km.github.io/logo.png)\ntext6-2'
-    );
-    await toImageDataURL(tree);
-    expect(toMarkdown(tree)).toEqual(
-      '# title6\n\ntest6-1\n![alt6](data:test6)\ntext6-2\n'
-    );
-  });
   it('should pass options from file name(image)', async () => {
     const tree = fromMarkdown(
       '# title7\n\n![alt7:qrcode:test7](/path/to/mdast-qrcode-width-125.png)\ntext7'
     );
     await toImageDataURL(tree);
     const { mockGenerateQRCode } = require('./lib/generate')._getMocks();
-    expect(mockGenerateQRCode.mock.calls[0][2]).toEqual({
+    expect(mockGenerateQRCode.mock.calls[0][1]).toEqual({
       width: 125,
       color: {}
     });
@@ -112,87 +103,19 @@ describe('toDataURL()', () => {
     );
     await toImageDataURL(tree);
     const { mockGenerateQRCode } = require('./lib/generate')._getMocks();
-    expect(mockGenerateQRCode.mock.calls[0][2]).toEqual({
+    expect(mockGenerateQRCode.mock.calls[0][1]).toEqual({
       width: 125,
       color: {}
     });
   });
-  it('should pass logo options from file name(image)', async () => {
-    const tree = fromMarkdown(
-      '# title9\n\n![alt9:qrcode:test9](/path/to/mdast-qrcode-logo_position-right-bottom.png)\ntext9'
-    );
-    await toImageDataURL(tree);
-    const { mockGenerateQRCode } = require('./lib/generate')._getMocks();
-    expect(mockGenerateQRCode.mock.calls[0][3]).toEqual({
-      logo: {
-        position: 'right-bottom'
-      },
-      format: {}
-    });
-  });
   it('should pass options from file name(link)', async () => {
     const tree = fromMarkdown(
-      '# title10\n\n[![alt10](/path/to/mdast-qrcode-logo_position-right-bottom.png)](url10)\ntext10'
+      '# title10\n\n[![alt10](/path/to/mdast-qrcode-format_type-jpeg.png)](url10)\ntext10'
     );
     await toImageDataURL(tree);
     const { mockGenerateQRCode } = require('./lib/generate')._getMocks();
-    expect(mockGenerateQRCode.mock.calls[0][3]).toEqual({
-      logo: {
-        position: 'right-bottom'
-      },
-      format: {}
-    });
-  });
-  it('should pass logo options from logo filename(image)', async () => {
-    const tree = fromMarkdown(
-      '# title11\n\n![alt11:qrcode:test11](/path/to/mdast-qrcode.png)\n![](https://hankei6km.github.io/logo-logo_position-right-bottom.png)\ntext11'
-    );
-    await toImageDataURL(tree);
-    const { mockGenerateQRCode } = require('./lib/generate')._getMocks();
-    expect(mockGenerateQRCode.mock.calls[0][3]).toEqual({
-      logo: {
-        position: 'right-bottom'
-      },
-      format: {}
-    });
-  });
-  it('should pass options from logo filename(link)', async () => {
-    const tree = fromMarkdown(
-      '# title12\n\n[![alt12](/path/to/mdast-qrcode.png)](url12)\n![](https://hankei6km.github.io/logo-logo_position-right-bottom.png)\ntext12'
-    );
-    await toImageDataURL(tree);
-    const { mockGenerateQRCode } = require('./lib/generate')._getMocks();
-    expect(mockGenerateQRCode.mock.calls[0][3]).toEqual({
-      logo: {
-        position: 'right-bottom'
-      },
-      format: {}
-    });
-  });
-  it('should pass logo options from logo alt(image)', async () => {
-    const tree = fromMarkdown(
-      '# title11\n\n![alt11:qrcode:test11](/path/to/mdast-qrcode.png)\n![logo_position-right-bottom](https://hankei6km.github.io/logo.png)\ntext11'
-    );
-    await toImageDataURL(tree);
-    const { mockGenerateQRCode } = require('./lib/generate')._getMocks();
-    expect(mockGenerateQRCode.mock.calls[0][3]).toEqual({
-      logo: {
-        position: 'right-bottom'
-      },
-      format: {}
-    });
-  });
-  it('should pass options from logo alt(link)', async () => {
-    const tree = fromMarkdown(
-      '# title12\n\n[![alt12](/path/to/mdast-qrcode.png)](url12)\n![logo_position-right-bottom](https://hankei6km.github.io/logo.png)\ntext12'
-    );
-    await toImageDataURL(tree);
-    const { mockGenerateQRCode } = require('./lib/generate')._getMocks();
-    expect(mockGenerateQRCode.mock.calls[0][3]).toEqual({
-      logo: {
-        position: 'right-bottom'
-      },
-      format: {}
+    expect(mockGenerateQRCode.mock.calls[0][2]).toEqual({
+      format: { type: 'jpeg' }
     });
   });
 });

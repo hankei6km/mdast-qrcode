@@ -15,33 +15,6 @@ const optionsDecoderColor = [
   { name: 'dark', decoder: /(^|.+-)color_dark-([0-9A-Fa-f]+)(-|$)/ },
   { name: 'light', decoder: /(^|.+-)color_light-([0-9A-Fa-f]+)(-|$)/ }
 ];
-const optionsDecoderLogo = [
-  {
-    name: 'position',
-    decoder: /(^|.+-)logo_position-(center|right-bottom)(-|$)/
-  },
-  { name: 'fillstyle', decoder: /(^|.+-)logo_fillstyle-([0-9A-Fa-f]+)(-|$)/ },
-  {
-    name: 'fillshape',
-    decoder: /(^|.+-)logo_fillshape-(rect|circle)(-|$)/
-  },
-  {
-    name: 'margin',
-    decoder: /(^|.+-)logo_margin-(\d+)(-|$)/
-  },
-  {
-    name: 'padding',
-    decoder: /(^|.+-)logo_padding-(\d+)(-|$)/
-  },
-  {
-    name: 'fit',
-    decoder: /(^|.+-)logo_fit-(\d+)(-|$)/
-  },
-  {
-    name: 'query',
-    decoder: /(^|.+-)logo_query-(.+)$/
-  }
-];
 const optionsDecoderFormat = [
   {
     name: 'type',
@@ -58,10 +31,9 @@ export function decodeOptions(
   const retOptions: any = JSON.parse(
     JSON.stringify(Object.assign({ color: {} }, options) || { color: {} })
   );
-  const retLogoOptions: any = JSON.parse(
+  const retMdqrOptions: any = JSON.parse(
     JSON.stringify(
-      Object.assign({ logo: {}, format: {} }, mdqrOptions) || {
-        logo: {},
+      Object.assign({ format: {} }, mdqrOptions) || {
         format: {}
       }
     )
@@ -82,22 +54,7 @@ export function decodeOptions(
       }
     });
   };
-  const decodeLogoOptions = (out: any, src: string) => {
-    optionsDecoderLogo.forEach((o) => {
-      const m = src.match(o.decoder);
-      if (m) {
-        // TODO: decoder 側で代入用の関数を指定できるように.
-        if (o.name === 'position' || o.name === 'fillshape') {
-          out.logo[o.name] = m[2];
-        } else if (o.name === 'query') {
-          out.logo[o.name] = decodeURIComponent(m[2]);
-        } else if (o.name === 'fillstyle') {
-          out.logo[o.name] = `#${m[2]}`;
-        } else {
-          out.logo[o.name] = parseInt(m[2], 10);
-        }
-      }
-    });
+  const decodeMdqrOptions = (out: any, src: string) => {
     optionsDecoderFormat.forEach((o) => {
       const m = src.match(o.decoder);
       if (m) {
@@ -111,7 +68,7 @@ export function decodeOptions(
     });
   };
   sources.forEach((s) => decodeOptions(retOptions, s));
-  sources.forEach((s) => decodeLogoOptions(retLogoOptions, s));
+  sources.forEach((s) => decodeMdqrOptions(retMdqrOptions, s));
 
-  return [retOptions, retLogoOptions];
+  return [retOptions, retMdqrOptions];
 }

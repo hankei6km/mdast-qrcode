@@ -5,6 +5,12 @@ import { MdqrOptions } from '../qrcode';
 //   name: 'margin' | 'scale' | 'width';
 //   decoder: RegExp;
 // }[];
+const optionsDecoder = [
+  {
+    name: 'errorCorrectionLevel',
+    decoder: /(^|.+-)eclevel-([LMQH])(-|$)/
+  }
+];
 const optionsDecoderNum = [
   { name: 'margin', decoder: /(^|.+-)margin-(\d+)(-|$)/ },
   { name: 'scale', decoder: /(^|.+-)scale-(\d+)(-|$)/ },
@@ -41,6 +47,12 @@ export function decodeOptions(
   //  fileName と alt からでコードするので関数化してある.
   // TODO: ユーティリティ化などを検討.
   const decodeOptions = (out: any, src: string) => {
+    optionsDecoder.forEach((o) => {
+      const m = src.match(o.decoder);
+      if (m) {
+        out[o.name] = m[2];
+      }
+    });
     optionsDecoderNum.forEach((o) => {
       const m = src.match(o.decoder);
       if (m) {

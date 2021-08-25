@@ -1,6 +1,13 @@
 import { decodeOptions } from './options';
 describe('decodeOptions()', () => {
   it('should decode from file names / log alt', () => {
+    expect(decodeOptions({}, {}, ['mdast-qrcode-eclevel-L', '', ''])).toEqual([
+      {
+        errorCorrectionLevel: 'L',
+        color: {}
+      },
+      { format: {} }
+    ]);
     expect(decodeOptions({}, {}, ['mdast-qrcode-margin-4', '', ''])).toEqual([
       {
         margin: 4,

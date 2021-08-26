@@ -91,7 +91,7 @@ yield:
 text5
 ```
 
-### Overlay logo image by writing logo image after qrcode image
+### Pass options from file name / alt
 
 code:
 
@@ -102,34 +102,7 @@ import { toImageDataURL } from './qrcode';
 
 (async () => {
   const tree = fromMarkdown(
-    '# title6\n\n[![alt6](/path/to/mdast-qrcode.png)](url6)\n![](https://hankei6km.github.io/logo.png)\ntext6'
-  );
-  await toImageDataURL(tree);
-  console.log(toMarkdown(tree));
-})();
-```
-
-yield:
-
-```markdown
-# title6
-
-[![alt6](data:image/png;base64,iVBORw0KGgoAAAAN ...snip ...=)](url6)
-text6
-```
-
-### Pass options from file name / logo alt
-
-code:
-
-```typescript
-import fromMarkdown from 'mdast-util-from-markdown';
-import toMarkdown from 'mdast-util-to-markdown';
-import { toImageDataURL } from './qrcode';
-
-(async () => {
-  const tree = fromMarkdown(
-    '# title7\n\n![alt7:qrcode:test7](/path/to/mdast-qrcode-width-250.png)\n\n![logo_fillstyle-FF0000FF](https://hankei6km.github.io/logo.png)text7'
+    '# title7\n\n![alt7:qrcode:test7](/path/to/mdast-qrcode-width-250.png)\n\ntext7'
   );
   await toImageDataURL(tree);
   console.log(toMarkdown(tree));
@@ -141,8 +114,8 @@ yield:
 ```markdown
 # title7
 
-[![alt7](data:image/png;base64,iVBORw0KGgoAAAAN ...snip ...=)](url7)
-text6
+![alt7](data:image/png;base64,iVBORw0KGgoAAAAN ...snip ...=)
+text7
 ```
 
 qrcode options:
@@ -152,16 +125,6 @@ qrcode options:
 - width: `-width-<number>`
 - colorr.light: `-color_light-<RRGGBBAA>` 
 - color.dark: `-color_light-<RRGGBBAA>` 
-
-mdqr logo options:
-
-- position: `-logo_position-<center | right-bottom>`
-- fillstyle: `-logo_fillstyle-<<RRGGBBAA>>`
-- fillshape: `-logo_fillshape-<circle | rect>>`
-- margin: `-logo_margin-<number>`
-- paddinfg: `-logo_padding-<number>`
-- fit: `-logo_fit-<number>`
-- query: `-logo_query-<string>` (describe in eend of options string)
 
 mdqr format options:
 - type: `-format_type-<png | jpeg>`
@@ -185,55 +148,22 @@ Options are passed to [QRCode.toDataURL](https://www.npmjs.com/package/qrcode#to
 
 Options to mdast-qrcode.
 
-##### logo
+#### `format`
 
-Options to overlay a logo image.
+Options to encode QR code to DataURL.
 
-###### `position`
+##### `type`
+ 
+type: `png` | `jpeg`
 
- `center` | `right-bottom`  
+default: `png`
 
-deault: `center`
+##### `quality`
+ 
+type: `number`
 
-###### `fillstyle`
+default: `0.92`
 
- `#RRGGBBAA`
-
-deault: `#FFFFFFFF`
-
-###### `fillshape`
-
- `circle` | `rect`
-
-deault: `circle`
-
-###### `margin`
-
- `<number>`
-
-default: `55`
-
-###### `padding`
-
- `<number>`
-
-default: `4`
-
-###### `fit`
-
-`<number>`
-
-The ratio to QR Code width(unit is `%`). It disabled by passing `0`.
-
-default: `35` 
-
-###### `query`
-
-`<string>`
-
-logo image ni
-
-It appened to URL of logo image.
 
 #### returns
 

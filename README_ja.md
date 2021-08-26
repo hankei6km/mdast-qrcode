@@ -91,7 +91,7 @@ yield:
 text5
 ```
 
-### ファイル名から options を渡す
+### ファイル名/ロゴの alt から options を渡す
 
 code:
 
@@ -102,7 +102,7 @@ import { toImageDataURL } from './qrcode';
 
 (async () => {
   const tree = fromMarkdown(
-    '# title6\n\n![alt6:qrcode:test6](/path/to/mdast-qrcode-margin-1-width-250.png)\ntext6'
+    '# title7\n\n![alt7:qrcode:test7](/path/to/mdast-qrcode-width-250.png)\n\ntext7'
   );
   await toImageDataURL(tree);
   console.log(toMarkdown(tree));
@@ -112,61 +112,56 @@ import { toImageDataURL } from './qrcode';
 yield:
 
 ```markdown
-# title6
+# title7
 
-[![alt6](data:image/png;base64,iVBORw0KGgoAAAAN ...snip ...=)](url6)
-text6
+![alt7](data:image/png;base64,iVBORw0KGgoAAAAN ...snip ...=)
+text7
 ```
 
-options:
+qrcode options:
 
 - margin: `-margin-<number>`
 - scale: `-scale-<number>`
 - width: `-width-<number>`
-- colorr.light: `-color-light-<#RRGGBBAA>` 
-- color.dark: `-color-light-<#RRGGBBAA>` 
+- colorr.light: `-color_light-<RRGGBBAA>` 
+- color.dark: `-color_light-<RRGGBBAA>` 
 
+mdqr format options:
+- type: `-format_type-<png | jpeg>`
+- quality: `-format_quality-<number>` (単位は `%`)
 
-### 画像の連続記述でロゴを重ねる
-
-code:
-
-```typescript
-import fromMarkdown from 'mdast-util-from-markdown';
-import toMarkdown from 'mdast-util-to-markdown';
-import { toImageDataURL } from './qrcode';
-
-(async () => {
-  const tree = fromMarkdown(
-    '# title7\n\n[![alt7](/path/to/mdast-qrcode.png)](url7)\n![](https://hankei6km.github.io/logo.png)\ntext7'
-  );
-  await toImageDataURL(tree);
-  console.log(toMarkdown(tree));
-})();
-```
-
-yield:
-
-```markdown
-# title6
-
-[![alt7](data:image/png;base64,iVBORw0KGgoAAAAN ...snip ...=)](url7)
-text7
-```
 
 ## API
 
-### `toImageDataURL(tree[, options])`
+### `toImageDataURL(tree[, options, mdqrOptions])`
 
 [mdast](https://github.com/syntax-tree/mdast) の画像に含まれる "qrcode:" を変換。
 画像は `root / paragraph / image` または `root / paragraph / link / image`  階層のみサポートしている。
 
-QRCode の直後に `image` がある場合、その `image` はロゴ画像として扱われる。
-
-
 #### options
 
-options は [QRCode,toDataURL](https://www.npmjs.com/package/qrcode#todataurltext-options-cberror-url-1) へ渡される。
+options は [QRCode.toDataURL](https://www.npmjs.com/package/qrcode#todataurltext-options-cberror-url-1) へ渡される。
+
+#### mdqrOptions
+
+mdast-qrcode 用のオプション。
+
+#### `format`
+
+QR code を DataURL でエンコードするときのオプション。
+
+##### `type`
+ 
+type: `png` | `jpeg`
+
+default: `png`
+
+##### `quality`
+ 
+type: `number`
+
+default: `0.92`
+
 
 #### returns
 
@@ -202,3 +197,6 @@ $ cat example/qrcode-deck.md  | md-qr > qrcode-embedded-deck.md
 MIT License
 
 Copyright (c) 2021 hankei6km
+
+QR コードの商標はデンソーウェーブの登録商標です。
+

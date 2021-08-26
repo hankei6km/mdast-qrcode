@@ -1,21 +1,40 @@
 import { generateQRCode } from './generate';
 
+const consoleErrror = console.error;
+
 jest.mock('canvas', () => {
   const mockDrawImage = jest.fn();
+  const mockBeginPath = jest.fn();
+  const mockArc = jest.fn();
+  const mockClip = jest.fn();
+  const mockClearRect = jest.fn();
+  const mockFillRect = jest.fn();
   const mockGetContext = jest.fn();
-  const mockToDataURL = jest.fn();
+  const mockCanvasToDataURL = jest.fn();
   const mockCreateCanvas = jest.fn();
   const mockLoadImage = jest.fn();
   const reset = () => {
     mockDrawImage.mockReset();
+    mockBeginPath.mockReset();
+    mockArc.mockReset();
+    mockClip.mockReset();
+    mockClearRect.mockReset();
+    mockFillRect.mockReset();
     mockGetContext.mockReset();
-    mockGetContext.mockReturnValue({ drawImage: mockDrawImage });
-    mockToDataURL.mockReset();
-    mockToDataURL.mockReturnValue('check');
+    mockGetContext.mockReturnValue({
+      beginPath: mockBeginPath,
+      arc: mockArc,
+      clip: mockClip,
+      drawImage: mockDrawImage,
+      clearRect: mockClearRect,
+      fillRect: mockFillRect
+    });
+    mockCanvasToDataURL.mockReset();
+    mockCanvasToDataURL.mockReturnValue('check');
     mockCreateCanvas.mockReset();
     mockCreateCanvas.mockReturnValue({
       getContext: mockGetContext,
-      toDataURL: mockToDataURL
+      toDataURL: mockCanvasToDataURL
     });
     mockLoadImage.mockReset();
     mockLoadImage
@@ -34,9 +53,14 @@ jest.mock('canvas', () => {
     loadImage: mockLoadImage,
     _reset: reset,
     _getMocks: () => ({
+      mockBeginPath,
+      mockArc,
+      mockClip,
       mockDrawImage,
+      mockClearRect,
+      mockFillRect,
       mockGetContext,
-      mockToDataURL,
+      mockCanvasToDataURL,
       mockCreateCanvas,
       mockLoadImage
     })
@@ -60,6 +84,7 @@ jest.mock('qrcode', () => {
 });
 
 afterEach(() => {
+  console.error = consoleErrror;
   require('canvas')._reset();
   require('qrcode')._reset();
 });
@@ -71,7 +96,8 @@ describe('generateQRCode()', () => {
     const {
       mockLoadImage,
       mockCreateCanvas,
-      mockDrawImage
+      mockDrawImage,
+      mockCanvasToDataURL
     } = require('canvas')._getMocks();
     const { mockToDataURL } = require('qrcode')._getMocks();
     expect(mockLoadImage.mock.calls.length).toEqual(1);
@@ -97,46 +123,36 @@ describe('generateQRCode()', () => {
       100,
       100
     ]);
+    expect(mockCanvasToDataURL.mock.calls.length).toEqual(1);
+    expect(mockCanvasToDataURL.mock.calls[0]).toEqual(['image/png']);
   });
-  it('should generate QRCode with logo', async () => {
-    const res = generateQRCode('test data1', 'logo');
+  it('should generate QRCode with color options', async () => {
+    const res = generateQRCode('test data1', {
+      color: {
+        dark: '#000000',
+        light: '#ffffff'
+      }
+    });
     expect(await res).toEqual('check');
-    const {
-      mockLoadImage,
-      mockCreateCanvas,
-      mockDrawImage
-    } = require('canvas')._getMocks();
     const { mockToDataURL } = require('qrcode')._getMocks();
-    expect(mockLoadImage.mock.calls.length).toEqual(2);
-    expect(mockLoadImage.mock.calls[0][0]).toEqual('logo');
-    expect(mockLoadImage.mock.calls[1][0]).toEqual('data:qrcode');
     expect(mockToDataURL.mock.calls[0]).toEqual([
       'test data1',
       {
-        errorCorrectionLevel: 'H',
-        margin: 4,
-        scale: 4,
         color: {
           dark: '#000000',
           light: '#ffffff'
         }
       }
     ]);
-    expect(mockCreateCanvas.mock.calls[0]).toEqual([200, 200]);
-    expect(mockDrawImage.mock.calls.length).toEqual(2);
-    expect(mockDrawImage.mock.calls[0]).toEqual([
-      { width: 200, height: 200 },
-      0,
-      0,
-      200,
-      200
-    ]);
-    expect(mockDrawImage.mock.calls[1]).toEqual([
-      { width: 100, height: 100 },
-      50,
-      50,
-      100,
-      100
-    ]);
+  });
+  it('should generate QRCode as jpeg', async () => {
+    const res = generateQRCode(
+      'test data1',
+      {},
+      { format: { type: 'jpeg', quality: 0.3 } }
+    );
+    expect(await res).toEqual('check');
+    const { mockCanvasToDataURL } = require('canvas')._getMocks();
+    expect(mockCanvasToDataURL.mock.calls[0]).toEqual(['image/jpeg', 0.3]);
   });
 });

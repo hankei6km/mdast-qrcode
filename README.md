@@ -90,7 +90,8 @@ yield:
 [![alt5](data:image/png;base64,iVBORw0KGgoAAAAN ...snip ...=)](url5)
 text5
 ```
-### Pass options from file name
+
+### Pass options from file name / alt
 
 code:
 
@@ -101,7 +102,7 @@ import { toImageDataURL } from './qrcode';
 
 (async () => {
   const tree = fromMarkdown(
-    '# title6\n\n![alt6:qrcode:test6](/path/to/mdast-qrcode-margin-1-width-250.png)\ntext6'
+    '# title7\n\n![alt7:qrcode:test7](/path/to/mdast-qrcode-width-250.png)\n\ntext7'
   );
   await toImageDataURL(tree);
   console.log(toMarkdown(tree));
@@ -111,50 +112,28 @@ import { toImageDataURL } from './qrcode';
 yield:
 
 ```markdown
-# title6
+# title7
 
-[![alt6](data:image/png;base64,iVBORw0KGgoAAAAN ...snip ...=)](url6)
-text6
+![alt7](data:image/png;base64,iVBORw0KGgoAAAAN ...snip ...=)
+text7
 ```
 
-options:
+qrcode options:
 
 - margin: `-margin-<number>`
 - scale: `-scale-<number>`
 - width: `-width-<number>`
-- colorr.light: `-color-light-<#RRGGBBAA>` 
-- color.dark: `-color-light-<#RRGGBBAA>` 
+- colorr.light: `-color_light-<RRGGBBAA>` 
+- color.dark: `-color_light-<RRGGBBAA>` 
 
-### Overlay logo image by writing logo image after qrcode image
+mdqr format options:
+- type: `-format_type-<png | jpeg>`
+- quality: `-format_quality-<number>` (unit: `%`)
 
-code:
-
-```typescript
-import fromMarkdown from 'mdast-util-from-markdown';
-import toMarkdown from 'mdast-util-to-markdown';
-import { toImageDataURL } from './qrcode';
-
-(async () => {
-  const tree = fromMarkdown(
-    '# title7\n\n[![alt7](/path/to/mdast-qrcode.png)](url7)\n![](https://hankei6km.github.io/logo.png)\ntext7'
-  );
-  await toImageDataURL(tree);
-  console.log(toMarkdown(tree));
-})();
-```
-
-yield:
-
-```markdown
-# title6
-
-[![alt7](data:image/png;base64,iVBORw0KGgoAAAAN ...snip ...=)](url7)
-text7
-```
 
 ## API
 
-### `toImageDataURL(tree[, options])`
+### `toImageDataURL(tree[, options, mdqrOptions])`
 
 convert "qrcode:" to dataURL in Image URL of [mdast](https://github.com/syntax-tree/mdast).
 Images only support `root / paragraph / image` or `root / paragraph / link / image`  hierarchy.
@@ -163,7 +142,28 @@ If `image` is exist after the QRCode, that` image` will be converted as logo ima
 
 #### options 
 
-Options are passed to [QRCode,toDataURL](https://www.npmjs.com/package/qrcode#todataurltext-options-cberror-url-1).
+Options are passed to [QRCode.toDataURL](https://www.npmjs.com/package/qrcode#todataurltext-options-cberror-url-1).
+
+#### mdqrOptions
+
+Options to mdast-qrcode.
+
+#### `format`
+
+Options to encode QR code to DataURL.
+
+##### `type`
+ 
+type: `png` | `jpeg`
+
+default: `png`
+
+##### `quality`
+ 
+type: `number`
+
+default: `0.92`
+
 
 #### returns
 
@@ -200,3 +200,5 @@ In addition to `:qrcode` convertion, Markdown string are also affected by [toMar
 MIT License
 
 Copyright (c) 2021 hankei6km
+
+The word "QR Code" is registered trademark of: DENSO WAVE INCORPORATED

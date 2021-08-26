@@ -1,9 +1,9 @@
-import * as path from 'path';
 import { Root, Content, Image, Link } from 'mdast';
 import QRCode from 'qrcode';
 import { generateQRCode } from './lib/generate';
-import { decodeQRCodeOptionsFromFileName } from './lib/options';
+import { decodeOptions } from './lib/options';
 import { selectTarget } from './lib/select';
+import { getFileNameFromURL } from './lib/util';
 
 const qrcodeInAlt = /(^|(^.*):)qrcode:(.+)$/;
 const QRCodeSourcKindValues = [
@@ -13,23 +13,38 @@ const QRCodeSourcKindValues = [
   'link-image-dummy'
 ] as const;
 export type QRCodeSourcKind = typeof QRCodeSourcKindValues[number];
+export type MdqrOptions = {
+  format?: {
+    type?: 'png' | 'jpeg';
+    quality?: number;
+  };
+};
+export const mdqrOptionsDefaults: Required<MdqrOptions> & {
+  format: Required<MdqrOptions['format']>;
+} = {
+  format: {
+    type: 'png',
+    quality: 0.92
+  }
+};
 
 export async function byImageScheme(
   tree: Content[],
-  options?: QRCode.QRCodeToDataURLOptions
+  options?: QRCode.QRCodeToDataURLOptions,
+  logoOptions?: MdqrOptions
 ) {
   const image = tree[0] as Image;
   const url: string = image.url || '';
   // as scheme
   const text = url.slice(7); // 'qrcode:'.length = 7
-  const logo = tree.length > 1 ? (tree[1] as Image).url || '' : '';
-  const d = await generateQRCode(text, logo, options);
+  const d = await generateQRCode(text, options);
   image.url = d;
 }
 
 export async function byImageDummy(
   tree: Content[],
-  options?: QRCode.QRCodeToDataURLOptions
+  options?: QRCode.QRCodeToDataURLOptions,
+  mdqrOptions?: MdqrOptions
 ) {
   const image = tree[0] as Image;
   const alt: string = image.alt || '';
@@ -37,12 +52,10 @@ export async function byImageDummy(
   const m = alt.match(qrcodeInAlt);
   if (m && m[3]) {
     //const d = await QRCode.toDataURL(m[3], options);
-    const logo = tree.length > 1 ? (tree[1] as Image).url || '' : '';
-    const fileName = path.parse(image.url || '').name;
+    const fileName = getFileNameFromURL(image.url);
     const d = await generateQRCode(
       m[3],
-      logo,
-      decodeQRCodeOptionsFromFileName(options || {}, fileName)
+      ...decodeOptions(options || {}, mdqrOptions || {}, [fileName])
     );
     image.alt = m[2] || '';
     image.url = d;
@@ -51,19 +64,18 @@ export async function byImageDummy(
 
 export async function byLinkImageDummy(
   tree: Content[],
-  options?: QRCode.QRCodeToDataURLOptions
+  options?: QRCode.QRCodeToDataURLOptions,
+  mdqrOptions?: MdqrOptions
 ) {
   const link = tree[0] as Link;
   const cc = link.children[0];
   if (cc.type === 'image') {
     const image: Image = cc;
     //const d = await QRCode.toDataURL(tree.url, options);
-    const logo = tree.length > 1 ? (tree[1] as Image).url || '' : '';
-    const fileName = path.parse(image.url || '').name;
+    const fileName = getFileNameFromURL(image.url);
     const d = await generateQRCode(
       link.url,
-      logo,
-      decodeQRCodeOptionsFromFileName(options || {}, fileName)
+      ...decodeOptions(options || {}, mdqrOptions || {}, [fileName])
     );
     image.url = d;
   }
@@ -79,7 +91,8 @@ export function addRemoveIdxs(r: number[], a: number[]) {
 
 export async function toImageDataURL(
   tree: Root,
-  options?: QRCode.QRCodeToDataURLOptions
+  options?: QRCode.QRCodeToDataURLOptions,
+  mdqrOptions: MdqrOptions = {}
 ): Promise<Root> {
   if (tree.type === 'root') {
     const l = tree.children.length;
@@ -93,13 +106,13 @@ export async function toImageDataURL(
           const targetInfo = selectTarget(c.children, ii);
 
           if (targetInfo.kind === 'image-scheme') {
-            await byImageScheme(targetInfo.qrContent, options);
+            await byImageScheme(targetInfo.qrContent, options, mdqrOptions);
             addRemoveIdxs(removeIdxs, targetInfo.removeIdxs);
           } else if (targetInfo.kind === 'image-dummy') {
-            await byImageDummy(targetInfo.qrContent, options);
+            await byImageDummy(targetInfo.qrContent, options, mdqrOptions);
             addRemoveIdxs(removeIdxs, targetInfo.removeIdxs);
           } else if (targetInfo.kind === 'link-image-dummy') {
-            await byLinkImageDummy(targetInfo.qrContent, options);
+            await byLinkImageDummy(targetInfo.qrContent, options, mdqrOptions);
             addRemoveIdxs(removeIdxs, targetInfo.removeIdxs);
           }
         }

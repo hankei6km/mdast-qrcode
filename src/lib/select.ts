@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { Content, Image } from 'mdast';
-import { QRCodeSourcKind } from '../qrcode';
+import { QRCodeSourcKind } from '../qrcode.js';
 
 const dummyQrcodeFile = 'mdast-qrcode';
 export function selectTarget(

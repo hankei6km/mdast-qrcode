@@ -1,6 +1,6 @@
 import { createReadStream } from 'fs';
 import { PassThrough } from 'stream';
-import cli from './cli';
+import cli from '../src/cli.js';
 
 describe('cli()', () => {
   it('should convert example file', async () => {

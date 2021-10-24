@@ -1,4 +1,4 @@
-import { decodeOptions } from './options';
+import { decodeOptions } from '../../src/lib/options.js';
 describe('decodeOptions()', () => {
   it('should decode from file names / log alt', () => {
     expect(decodeOptions({}, {}, ['mdast-qrcode-eclevel-L', '', ''])).toEqual([

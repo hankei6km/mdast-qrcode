@@ -1,14 +1,16 @@
-import fromMarkdown from 'mdast-util-from-markdown';
-import toMarkdown from 'mdast-util-to-markdown';
-import { addRemoveIdxs, toImageDataURL } from './qrcode';
+import { jest } from '@jest/globals';
+import { fromMarkdown } from 'mdast-util-from-markdown';
+import { toMarkdown } from 'mdast-util-to-markdown';
 
-jest.mock('./lib/generate', () => {
+jest.unstable_mockModule('../src/lib/generate.js', async () => {
   const mockGenerateQRCode = jest.fn();
   const reset = () => {
     mockGenerateQRCode.mockReset();
     mockGenerateQRCode.mockImplementation(
-      async (data: string): Promise<string> => {
-        return await jest.fn().mockResolvedValue(`data:${data}`)();
+      async (data: any): Promise<string> => {
+        return (await jest
+          .fn()
+          .mockResolvedValue(`data:${data}` as never)()) as string;
       }
     );
   };
@@ -22,8 +24,13 @@ jest.mock('./lib/generate', () => {
   };
 });
 
-afterEach(() => {
-  require('./lib/generate')._reset();
+const { mockGenerateQRCode } = (
+  (await import('../src/lib/generate.js')) as any
+)._getMocks();
+const { addRemoveIdxs, toImageDataURL } = await import('../src/qrcode.js');
+
+afterEach(async () => {
+  ((await import('../src/lib/generate.js')) as any)._reset();
 });
 
 describe('addRemoveIdxs()', () => {
@@ -91,7 +98,6 @@ describe('toDataURL()', () => {
       '# title7\n\n![alt7:qrcode:test7](/path/to/mdast-qrcode-width-125.png)\ntext7'
     );
     await toImageDataURL(tree);
-    const { mockGenerateQRCode } = require('./lib/generate')._getMocks();
     expect(mockGenerateQRCode.mock.calls[0][1]).toEqual({
       width: 125,
       color: {}
@@ -102,7 +108,6 @@ describe('toDataURL()', () => {
       '# title8\n\n[![alt8](/path/to/mdast-qrcode-width-125.png)](url8)\ntext8'
     );
     await toImageDataURL(tree);
-    const { mockGenerateQRCode } = require('./lib/generate')._getMocks();
     expect(mockGenerateQRCode.mock.calls[0][1]).toEqual({
       width: 125,
       color: {}
@@ -113,7 +118,6 @@ describe('toDataURL()', () => {
       '# title10\n\n[![alt10](/path/to/mdast-qrcode-format_type-jpeg.png)](url10)\ntext10'
     );
     await toImageDataURL(tree);
-    const { mockGenerateQRCode } = require('./lib/generate')._getMocks();
     expect(mockGenerateQRCode.mock.calls[0][2]).toEqual({
       format: { type: 'jpeg' }
     });

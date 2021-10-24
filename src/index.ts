@@ -1,2 +1,2 @@
-import { toImageDataURL } from './qrcode';
+import { toImageDataURL } from './qrcode.js';
 export { toImageDataURL };

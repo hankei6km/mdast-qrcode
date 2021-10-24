@@ -1,4 +1,8 @@
-import { getFileNameFromURL, replaceQuery, validLogoImageURL } from './util';
+import {
+  getFileNameFromURL,
+  replaceQuery,
+  validLogoImageURL
+} from '../../src/lib/util.js';
 
 describe('getFileNameFromURL()', () => {
   it('should retun filename from path', () => {

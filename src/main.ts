@@ -2,25 +2,25 @@
 import * as fs from 'fs';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import cli from './cli';
-
-const argv = yargs(hideBin(process.argv))
-  .scriptName('mdqr')
-  .usage('$0 [options] --')
-  .alias('h', 'help')
-  .example(
-    'cat foo.md | $0 -- > bar.md',
-    'convert "qrcode:" contained image of markdown to DataURL'
-  )
-  .config('settings', function (configPath) {
-    return JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-  })
-  .config({
-    toMarkdown: { bullet: '-', rule: '-' }
-  })
-  .help().argv;
+import cli from './cli.js';
 
 (async () => {
+  const argv = await yargs(hideBin(process.argv))
+    .scriptName('mdqr')
+    .usage('$0 [options] --')
+    .alias('h', 'help')
+    .example(
+      'cat foo.md | $0 -- > bar.md',
+      'convert "qrcode:" contained image of markdown to DataURL'
+    )
+    .config('settings', function (configPath) {
+      return JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+    })
+    .config({
+      toMarkdown: { bullet: '-', rule: '-' }
+    })
+    .help().argv;
+
   const bullet = (argv.toMarkdown as any).bullet;
   const rule = (argv.toMarkdown as any).rule;
   process.exit(

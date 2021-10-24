@@ -1,36 +1,25 @@
 # https://docs.github.com/ja/actions/guides/publishing-nodejs-packages
-name: Node.js Package(npmjs)
+name: Node.js Package(GitHub Packages)
 on:
   release:
     # draft から publish への対応でサンプルの created から変更
     types:
       - published
 jobs:
-  publish_to_npmjs:
-    if: ${{ github.event.release.prerelease ==  false }}
+  publish_to_gh_pkgs:
     runs-on: ubuntu-latest
-    environment: npm_pkg
+    environment: gh_pkg
 
     steps:
-    # prerelease のような文字が含まれていたら失敗させる.
-    - name: Check name and tag_name
-      if: >-
-        ${{ contains(github.event.release.name, 'p') ||
-        contains(github.event.release.tag_name, 'p') ||
-        contains(github.event.release.name, '-') ||
-        contains(github.event.release.tag_name, '-') }}
-      run: |
-        echo 'name: ${{ github.event.release.name }}'
-        echo 'tag_name: ${{ github.event.release.tag_name }}'
-        exit 1
-
     - uses: actions/checkout@v2
 
-    # npm に公開するように .npmrc ファイルを設定する
+    # .npmrc ファイルをセットアップして GitHub Packages に公開する
     - uses: actions/setup-node@v2
       with:
         node-version: '14.x'
-        registry-url: 'https://registry.npmjs.org'
+        registry-url: 'https://npm.pkg.github.com'
+        # デフォルトはワークフローファイルを所有するユーザまたは Organization
+        # scope: '@hankei6km'
 
     # https://docs.github.com/ja/free-pro-team@latest/actions/guides/caching-dependencies-to-speed-up-workflows
     - name: Cache node modules
@@ -45,20 +34,32 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
 
+    # package.json を GitHub Packages 用に調整.
+    - name: Change scope
+      run: jq '.name |= (sub("^.+/"; "") | sub("^"; "@"+ (env.GITHUB_REPOSITORY | split("/")[0])  +"/")) ' package.json  > tmp_package.json && mv tmp_package.json package.json
+
     # https://dev.classmethod.jp/articles/github-actions-npm-automatic-release/
     # activity type を published へ変更したので念の為
-    - name: can-npm-publish
-      run: npx can-npm-publish
+    # `publishConfig` の書き換えができたらコメント外す.
+    # - name: can-npm-publish
+    #   run: npx can-npm-publish
 
     - name: Install modules
       run: npm ci
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Run tests
       run: npm run test
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build
       run: npm run build
-
-    - run: npm publish --access public
       env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

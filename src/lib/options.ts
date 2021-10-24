@@ -1,5 +1,5 @@
 import { QRCodeToDataURLOptions } from 'qrcode';
-import { MdqrOptions } from '../qrcode';
+import { MdqrOptions } from '../qrcode.js';
 
 // type OptionsInFileName = {
 //   name: 'margin' | 'scale' | 'width';

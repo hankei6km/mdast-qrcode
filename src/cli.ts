@@ -1,9 +1,12 @@
 import { Readable, Writable } from 'stream';
-import fromMarkdown from 'mdast-util-from-markdown';
-import toMarkdown from 'mdast-util-to-markdown';
-import { toImageDataURL } from './qrcode';
-var syntax = require('micromark-extension-frontmatter');
-var frontmatter = require('mdast-util-frontmatter');
+import { fromMarkdown } from 'mdast-util-from-markdown';
+import { toMarkdown } from 'mdast-util-to-markdown';
+import { toImageDataURL } from './qrcode.js';
+import { frontmatter } from 'micromark-extension-frontmatter';
+import {
+  frontmatterFromMarkdown,
+  frontmatterToMarkdown
+} from 'mdast-util-frontmatter';
 
 type ToMarkdownOptions = {
   bullet?: '-' | '*' | '+';
@@ -45,18 +48,18 @@ const cli = async ({
       stdin.on('end', () => resolve(source));
     });
     const tree = fromMarkdown(source, {
-      extensions: [syntax(['yaml', 'toml'])],
-      mdastExtensions: [frontmatter.fromMarkdown(['yaml', 'toml'])]
+      extensions: [frontmatter(['yaml', 'toml'])],
+      mdastExtensions: [frontmatterFromMarkdown(['yaml', 'toml'])]
     });
     await toImageDataURL(tree);
     stdout.write(
       toMarkdown(tree, {
         bullet,
         rule,
-        extensions: [frontmatter.toMarkdown(['yaml', 'toml'])]
+        extensions: [frontmatterToMarkdown(['yaml', 'toml'])]
       })
     );
-  } catch (err) {
+  } catch (err: any) {
     stderr.write(err.toString());
     stderr.write('\n');
     return 1;

@@ -1,9 +1,9 @@
 import { Root, Content, Image, Link } from 'mdast';
 import QRCode from 'qrcode';
-import { generateQRCode } from './lib/generate';
-import { decodeOptions } from './lib/options';
-import { selectTarget } from './lib/select';
-import { getFileNameFromURL } from './lib/util';
+import { generateQRCode } from './lib/generate.js';
+import { decodeOptions } from './lib/options.js';
+import { selectTarget } from './lib/select.js';
+import { getFileNameFromURL } from './lib/util.js';
 
 const qrcodeInAlt = /(^|(^.*):)qrcode:(.+)$/;
 const QRCodeSourcKindValues = [
@@ -13,20 +13,8 @@ const QRCodeSourcKindValues = [
   'link-image-dummy'
 ] as const;
 export type QRCodeSourcKind = typeof QRCodeSourcKindValues[number];
-export type MdqrOptions = {
-  format?: {
-    type?: 'png' | 'jpeg';
-    quality?: number;
-  };
-};
-export const mdqrOptionsDefaults: Required<MdqrOptions> & {
-  format: Required<MdqrOptions['format']>;
-} = {
-  format: {
-    type: 'png',
-    quality: 0.92
-  }
-};
+export type MdqrOptions = {};
+export const mdqrOptionsDefaults: Required<MdqrOptions> = {};
 
 export async function byImageScheme(
   tree: Content[],
